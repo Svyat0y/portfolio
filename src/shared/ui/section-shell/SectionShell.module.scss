@@ -1,0 +1,26 @@
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-5);
+  align-items: center;
+}
+
+.twoCol {
+  @media (min-width: 901px) {
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  }
+}
+
+.title {
+  font-size: var(--text-h2);
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+}
+
+.main {
+  min-width: 0;
+}
+
+.aside {
+  min-width: 0;
+}

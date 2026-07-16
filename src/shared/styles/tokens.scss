@@ -1,0 +1,42 @@
+:root {
+  /* colors */
+  --color-bg: #0a0a0a;
+  --color-bg-raised: #141412;
+  --color-text: #f0efe9;
+  --color-text-muted: #8a8a85;
+  --color-accent: #c6ff35;
+  --color-accent-dim: rgba(198, 255, 53, 0.14);
+  --color-border: rgba(240, 239, 233, 0.12);
+  --color-glass: rgba(240, 239, 233, 0.04);
+  --color-glass-highlight: rgba(240, 239, 233, 0.25);
+
+  /* typography */
+  --font-display: 'Space Grotesk', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+
+  --text-hero: clamp(3rem, 11vw, 7rem);
+  --text-h2: clamp(2rem, 5vw, 3.5rem);
+  --text-body: clamp(1rem, 1.2vw, 1.125rem);
+  --text-small: 0.8125rem;
+
+  /* spacing */
+  --space-1: 0.5rem;
+  --space-2: 1rem;
+  --space-3: 1.5rem;
+  --space-4: 2.5rem;
+  --space-5: 4rem;
+  --gutter: clamp(1.25rem, 4vw, 4rem);
+
+  /* misc */
+  --header-height: 4.5rem;
+  --radius: 12px;
+  --transition-fast: 160ms ease;
+}
+
+/* Header stacks into two centered rows below 769px (see Header.module.scss)
+   and needs more clearance so section content doesn't sit under it. */
+@media (max-width: 768px) {
+  :root {
+    --header-height: 6.25rem;
+  }
+}

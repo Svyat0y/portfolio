@@ -1,0 +1,39 @@
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(240, 239, 233, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(240, 239, 233, 0.035) 1px, transparent 1px);
+  background-size: 72px 72px;
+  mask-image: radial-gradient(ellipse at 50% 40%, black 30%, transparent 75%);
+  -webkit-mask-image: radial-gradient(ellipse at 50% 40%, black 30%, transparent 75%);
+}
+
+.fragment {
+  position: absolute;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: rgba(240, 239, 233, 0.07);
+  white-space: nowrap;
+  animation: drift linear infinite;
+}
+
+@keyframes drift {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-40px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}

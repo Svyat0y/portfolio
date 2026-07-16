@@ -1,0 +1,73 @@
+.intro {
+  margin-top: var(--space-2);
+  max-width: 26rem;
+  color: var(--color-text-muted);
+}
+
+.info {
+  margin-top: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.infoRow {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.infoLabel {
+  font-family: var(--font-mono);
+  font-size: var(--text-small);
+  text-transform: lowercase;
+  letter-spacing: 0.1em;
+  color: var(--color-accent);
+}
+
+.infoValue {
+  font-size: 1.0625rem;
+  color: var(--color-text);
+
+  a {
+    transition: color var(--transition-fast);
+
+    &:hover {
+      color: var(--color-accent);
+    }
+  }
+}
+
+.links {
+  list-style: none;
+  margin-top: var(--space-4);
+  display: flex;
+  gap: var(--space-2);
+}
+
+.link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: var(--font-mono);
+  font-size: var(--text-small);
+  text-transform: lowercase;
+  letter-spacing: 0.08em;
+  color: var(--color-text-muted);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 0.45rem 0.85rem;
+  transition:
+    color var(--transition-fast),
+    border-color var(--transition-fast);
+
+  &:hover {
+    color: var(--color-accent);
+    border-color: var(--color-accent);
+  }
+}
+
+.icon {
+  width: 16px;
+  height: 16px;
+}

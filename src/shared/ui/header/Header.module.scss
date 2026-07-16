@@ -1,0 +1,62 @@
+.header {
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem var(--gutter);
+  background: linear-gradient(to bottom, rgba(10, 10, 10, 0.85), rgba(10, 10, 10, 0));
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+
+  @media (min-width: 769px) {
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 0;
+    height: var(--header-height);
+    padding: 0 var(--gutter);
+  }
+}
+
+.logo {
+  font-family: var(--font-mono);
+  font-size: 0.9375rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-text);
+  white-space: nowrap;
+}
+
+.nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem 1.25rem;
+
+  @media (min-width: 769px) {
+    flex-wrap: nowrap;
+    gap: clamp(1rem, 3vw, 2.5rem);
+  }
+}
+
+.link {
+  font-family: var(--font-mono);
+  font-size: var(--text-small);
+  letter-spacing: 0.12em;
+  text-transform: lowercase;
+  color: var(--color-text-muted);
+  transition: color var(--transition-fast);
+  /* reserve width so scramble squares don't shift layout */
+  font-variant-numeric: tabular-nums;
+
+  &:hover {
+    color: var(--color-text);
+  }
+
+  &.active {
+    color: var(--color-accent);
+  }
+}

@@ -1,0 +1,63 @@
+.hero {
+  min-height: 100vh;
+  min-height: 100svh;
+  justify-content: center;
+  gap: var(--space-2);
+}
+
+.intro {
+  font-family: var(--font-mono);
+  font-size: var(--text-small);
+  color: var(--color-accent);
+  letter-spacing: 0.2em;
+}
+
+.name {
+  font-size: var(--text-hero);
+  font-weight: 700;
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+  cursor: default;
+}
+
+.role {
+  font-family: var(--font-mono);
+  font-size: clamp(1rem, 2.2vw, 1.5rem);
+  color: var(--color-text-muted);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.tagline {
+  max-width: 34rem;
+  color: var(--color-text-muted);
+  margin-top: var(--space-2);
+}
+
+.scrollHint {
+  position: absolute;
+  bottom: var(--space-4);
+  left: var(--gutter);
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  color: var(--color-text-muted);
+  font-family: var(--font-mono);
+  font-size: var(--text-small);
+  letter-spacing: 0.2em;
+}
+
+.scrollArrow {
+  animation: bob 1.8s ease-in-out infinite;
+}
+
+@keyframes bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(6px);
+  }
+}
