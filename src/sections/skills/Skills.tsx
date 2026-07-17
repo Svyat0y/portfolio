@@ -1,18 +1,28 @@
 import { SectionShell } from '@/shared/ui/section-shell';
-import { skills } from './skills.content';
+import { skillGroups } from './skills.content';
 import styles from './Skills.module.scss';
 
 export function Skills() {
   return (
-    <SectionShell id="skills" index={2} title="Skills">
-      <p className={styles.note}>// interactive glass bowl — stage 2</p>
-      <ul className={styles.chips}>
-        {skills.map(({ label }) => (
-          <li key={label} className={styles.chip}>
-            {label}
-          </li>
+    <SectionShell id="skills" title="Skills">
+      <p className={styles.lead}>
+        The stack I reach for — from the interface down to the infrastructure.
+      </p>
+
+      <dl className={styles.groups}>
+        {skillGroups.map(({ label, items }) => (
+          <div key={label} className={styles.group}>
+            <dt className={styles.groupLabel}>{label}</dt>
+            <dd className={styles.groupItems}>
+              {items.map((item) => (
+                <span key={item} className={styles.item}>
+                  {item}
+                </span>
+              ))}
+            </dd>
+          </div>
         ))}
-      </ul>
+      </dl>
     </SectionShell>
   );
 }

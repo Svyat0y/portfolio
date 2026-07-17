@@ -6,7 +6,6 @@ export function About() {
   return (
     <SectionShell
       id="about"
-      index={1}
       title="About"
       aside={
         <div className={styles.resume}>

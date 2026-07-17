@@ -1,29 +1,11 @@
-import styles from './Backdrop.module.scss';
-import { FRAGMENTS } from './backdrop.content';
+import { BackdropField } from './BackdropField';
 
 /**
- * Fixed background layer: faint grid + drifting code fragments.
- * Parallax depth via per-item CSS variables; scroll-linked motion arrives
- * with GSAP in a later stage.
+ * Fixed background layer: a generative lime constellation on near-black. The
+ * cursor parts the field and reaches bright links to nearby particles. Sits at
+ * z-index 0 (see `global.scss`) strictly behind all page content;
+ * `prefers-reduced-motion` renders a single static frame.
  */
 export function Backdrop() {
-  return (
-    <div className={styles.backdrop} aria-hidden="true">
-      <div className={styles.grid} />
-      {FRAGMENTS.map((text, i) => (
-        <span
-          key={text}
-          className={styles.fragment}
-          style={{
-            top: `${((i * 37 + 11) % 90) + 4}%`,
-            left: `${((i * 53 + 7) % 92) + 2}%`,
-            animationDelay: `${i * -3.5}s`,
-            animationDuration: `${22 + (i % 5) * 6}s`,
-          }}
-        >
-          {text}
-        </span>
-      ))}
-    </div>
-  );
+  return <BackdropField />;
 }
