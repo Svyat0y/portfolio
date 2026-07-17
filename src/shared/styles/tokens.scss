@@ -14,7 +14,7 @@
   --font-display: 'Space Grotesk', system-ui, sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, monospace;
 
-  --text-hero: clamp(3rem, 11vw, 7rem);
+  --text-hero: clamp(3rem, 10vw, 6rem);
   --text-h2: clamp(2rem, 5vw, 3.5rem);
   --text-body: clamp(1rem, 1.2vw, 1.125rem);
   --text-small: 0.8125rem;
@@ -33,10 +33,11 @@
   --transition-fast: 160ms ease;
 }
 
-/* Header stacks into two centered rows below 769px (see Header.module.scss)
-   and needs more clearance so section content doesn't sit under it. */
+/* Header stacks into two centered rows below 769px (see Header.module.scss):
+   logo row (44px) + nav row (44px) + padding. Needs more clearance so section
+   content doesn't sit under it. */
 @media (max-width: 768px) {
   :root {
-    --header-height: 6.25rem;
+    --header-height: 7.5rem;
   }
 }

@@ -1,3 +1,4 @@
+import { createPortal } from 'react-dom';
 import type { Project } from '../../projects.content';
 import styles from './ProjectDetail.module.scss';
 
@@ -15,13 +16,22 @@ interface ProjectDetailProps {
  * project list you clicked from (was a real problem on mobile when the
  * detail used to render inline).
  *
+ * Rendered via a portal straight into `document.body`, not inline where
+ * `Projects` calls it (inside `<main>`). `<main>` establishes its own
+ * stacking context (see `global.scss`, needed so the backdrop canvas stays
+ * behind page content), which would otherwise trap this panel's `z-index`
+ * inside `main` — unable to rise above `Header` (a sibling of `main`, outside
+ * that context) even at `z-index: 200`. The portal escapes `main` entirely so
+ * the panel's stacking is compared directly against Header's in the root
+ * context, where it correctly wins and blocks header nav while open.
+ *
  * Closing plays the reverse animation before unmounting: `onBack` just asks
  * the parent to mark this as closing (`closing` prop flips to true); once
  * the panel's own close animation finishes, `onExited` tells the parent it's
  * safe to stop rendering this component.
  */
 export function ProjectDetail({ project, closing, onBack, onExited }: ProjectDetailProps) {
-  return (
+  return createPortal(
     <div className={`${styles.overlay} ${closing ? styles.closing : ''}`} onClick={onBack}>
       <div
         className={styles.panel}
@@ -61,6 +71,7 @@ export function ProjectDetail({ project, closing, onBack, onExited }: ProjectDet
           )}
         </div>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }

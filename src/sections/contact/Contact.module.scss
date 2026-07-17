@@ -49,11 +49,13 @@
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
+  min-height: 44px;
   font-family: var(--font-mono);
   font-size: var(--text-small);
   text-transform: lowercase;
   letter-spacing: 0.08em;
   color: var(--color-text-muted);
+  background: var(--color-bg-raised);
   border: 1px solid var(--color-border);
   border-radius: var(--radius);
   padding: 0.45rem 0.85rem;

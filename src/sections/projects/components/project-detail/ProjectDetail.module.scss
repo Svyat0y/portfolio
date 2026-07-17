@@ -21,7 +21,14 @@
   height: 100dvh;
   overflow-y: auto;
   padding: calc(var(--header-height) + var(--space-3)) var(--gutter) var(--space-5);
-  background: var(--color-bg-raised);
+  /* Calm reading surface — a fully opaque solid base with one static lime
+     glow anchored top-right (echoes the landing constellation's glow corner,
+     without its particles/motion). Deliberately quieter than the lively
+     full-page background: this is a "read the details" moment, not a "wow"
+     one. No transparency into the page behind — nothing can bleed through. */
+  background:
+    radial-gradient(52rem 52rem at 94% -10%, rgba(198, 255, 53, 0.1), transparent 60%),
+    var(--color-bg-raised);
   border-left: 1px solid var(--color-border);
   box-shadow: -24px 0 48px -16px rgba(0, 0, 0, 0.6);
   animation: panel-in 320ms cubic-bezier(0.16, 1, 0.3, 1) both;

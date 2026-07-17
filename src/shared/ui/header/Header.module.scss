@@ -22,6 +22,9 @@
 }
 
 .logo {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
   font-family: var(--font-mono);
   font-size: 0.9375rem;
   letter-spacing: 0.06em;
@@ -43,6 +46,11 @@
 }
 
 .link {
+  display: inline-flex;
+  align-items: center;
+  /* 44px minimum touch target (WCAG 2.5.5) */
+  min-height: 44px;
+  padding-inline: 0.25rem;
   font-family: var(--font-mono);
   font-size: var(--text-small);
   letter-spacing: 0.12em;

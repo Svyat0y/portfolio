@@ -22,6 +22,20 @@ body {
   overflow-x: hidden;
 }
 
+/* Explicit stacking: the fixed Backdrop sits at z-index 0, all page content
+   above it. Guarantees the animated background never paints over text/controls,
+   in every browser (safer than relying on a lone negative z-index).
+   The inherited text-shadow is a dark halo (background-colored) around every
+   glyph — invisible over empty bg, but it knocks the constellation's thin lines
+   back from the edges of letters so text always reads clearly on top. */
+main {
+  position: relative;
+  z-index: 1;
+  text-shadow:
+    0 0 10px var(--color-bg),
+    0 0 4px var(--color-bg);
+}
+
 a {
   color: inherit;
   text-decoration: none;
@@ -44,8 +58,14 @@ button {
    No forced min-height/centering here — that's what the old full-page-slide
    mode needed (see docs/CONTEXT.md). With plain scroll, sections should just
    size to their content; Hero opts back into full-viewport height itself. */
+/* Full-screen frames (see DESIGN.md). `min-height` — not a fixed height — so a
+   section that runs taller than the viewport (long About text, wrapped Contact
+   form on mobile) just grows the page instead of clipping. Content shorter than
+   the viewport is centered, giving every section a deliberate full-screen
+   presence and even pacing. */
 .section {
-  padding: calc(var(--header-height) + var(--space-3)) var(--gutter) var(--space-5);
+  min-height: 100svh;
+  padding: calc(var(--header-height) + var(--space-2)) var(--gutter) var(--space-5);
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -60,13 +80,44 @@ button {
   margin: 0 auto;
 }
 
-.section-label {
+/* Inline marker before a section title. Nods to the "// comment" motif from
+   the hero (`// portfolio`) and the contact success message — one named brand
+   mark, not a tracked eyebrow repeated above every section. */
+.section-mark {
   font-family: var(--font-mono);
-  font-size: var(--text-small);
   color: var(--color-accent);
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  margin-bottom: var(--space-3);
+  font-weight: 400;
+  margin-right: 0.3em;
+}
+
+/* Scroll reveal — see `useReveal`. The hidden start state applies ONLY under
+   `html.reveal-ready`, a class the hook adds once JS runs; so no-JS / headless
+   renders show content normally and nothing ships blank. A revealed group's
+   direct children cascade in with a small stagger. */
+html.reveal-ready [data-reveal-group] > * {
+  opacity: 0;
+  transform: translateY(14px);
+  transition:
+    opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+html.reveal-ready [data-reveal-group][data-revealed] > * {
+  opacity: 1;
+  transform: none;
+}
+
+html.reveal-ready [data-reveal-group][data-revealed] > *:nth-child(2) {
+  transition-delay: 70ms;
+}
+html.reveal-ready [data-reveal-group][data-revealed] > *:nth-child(3) {
+  transition-delay: 140ms;
+}
+html.reveal-ready [data-reveal-group][data-revealed] > *:nth-child(4) {
+  transition-delay: 210ms;
+}
+html.reveal-ready [data-reveal-group][data-revealed] > *:nth-child(n + 5) {
+  transition-delay: 280ms;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -75,5 +126,12 @@ button {
   *::after {
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;
+  }
+
+  /* belt-and-suspenders: the hook already no-ops under reduced motion, but if
+     `reveal-ready` is ever present, keep content fully visible regardless. */
+  html.reveal-ready [data-reveal-group] > * {
+    opacity: 1;
+    transform: none;
   }
 }

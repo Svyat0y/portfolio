@@ -4,6 +4,7 @@ import { Navigation, Pagination, Autoplay, Keyboard } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
+import { useReveal } from '@/shared/lib/hooks';
 import { projects, type Project } from './projects.content';
 import { ProjectCard } from './components/project-card';
 import { ProjectDetail } from './components/project-detail';
@@ -30,6 +31,8 @@ export function Projects() {
   const [nextEl, setNextEl] = useState<HTMLButtonElement | null>(null);
   const [paginationEl, setPaginationEl] = useState<HTMLDivElement | null>(null);
 
+  const revealRef = useReveal<HTMLDivElement>();
+
   const closeDetail = () => setClosing(true);
 
   useEffect(() => {
@@ -51,9 +54,13 @@ export function Projects() {
 
   return (
     <section id="projects" className="section">
-      <div className="section-inner">
-        <p className="section-label">03 / Projects</p>
-        <h2 className={styles.title}>Projects</h2>
+      <div className="section-inner" data-reveal-group ref={revealRef}>
+        <h2 className={styles.title}>
+          <span className="section-mark" aria-hidden="true">
+            //
+          </span>
+          Projects
+        </h2>
 
         <div className={styles.carousel}>
           <Swiper

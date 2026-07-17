@@ -1,30 +1,39 @@
 /**
- * Tech shown in the Skills bowl (stage 2 turns these into physics bodies).
- * `icon` will map to an SVG asset later; for now the label carries the value.
+ * Skills grouped by domain. Grouping (over a flat list) gives the section
+ * real structure and reads as intentional rather than a chip dump.
  */
-export interface Skill {
+export interface SkillGroup {
   label: string;
+  items: string[];
 }
 
-export const skills: Skill[] = [
-  { label: 'JavaScript' },
-  { label: 'TypeScript' },
-  { label: 'React.js' },
-  { label: 'Next.js' },
-  { label: 'Node.js' },
-  { label: 'NestJS' },
-  { label: 'Express' },
-  { label: 'GraphQL' },
-  { label: 'REST APIs' },
-  { label: 'HTML/CSS/SCSS' },
-  { label: 'Tailwind CSS' },
-  { label: 'Styled Components' },
-  { label: 'MongoDB' },
-  { label: 'PostgreSQL' },
-  { label: 'Puppeteer' },
-  { label: 'Cypress' },
-  { label: 'CI/CD' },
-  { label: 'Git' },
-  { label: 'WordPress' },
-  { label: 'Strapi' },
+export const skillGroups: SkillGroup[] = [
+  {
+    label: 'Frontend',
+    items: [
+      'React.js',
+      'Next.js',
+      'TypeScript',
+      'JavaScript',
+      'HTML/CSS/SCSS',
+      'Tailwind CSS',
+      'Styled Components',
+    ],
+  },
+  {
+    label: 'Backend & APIs',
+    items: ['Node.js', 'NestJS', 'Express', 'GraphQL', 'REST APIs'],
+  },
+  {
+    label: 'Data',
+    items: ['PostgreSQL', 'MongoDB'],
+  },
+  {
+    label: 'Testing & CI',
+    items: ['Cypress', 'Puppeteer', 'CI/CD', 'Git'],
+  },
+  {
+    label: 'CMS',
+    items: ['Strapi', 'WordPress'],
+  },
 ];

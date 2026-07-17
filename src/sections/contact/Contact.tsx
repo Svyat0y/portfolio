@@ -11,7 +11,7 @@ const ICONS = {
 
 export function Contact() {
   return (
-    <SectionShell id="contact" index={4} title="Contact" aside={<ContactForm />}>
+    <SectionShell id="contact" title="Contact" aside={<ContactForm />}>
       <p className={styles.intro}>{contactIntro}</p>
 
       <dl className={styles.info}>
