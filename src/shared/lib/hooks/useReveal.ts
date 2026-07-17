@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import { prefersReducedMotion } from '@/shared/lib/utils';
 
 /**
  * Scroll-reveal that ENHANCES already-visible content.
@@ -19,10 +20,16 @@ export function useReveal<T extends HTMLElement>() {
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if (prefersReducedMotion()) return;
 
     document.documentElement.classList.add('reveal-ready');
-    const reveal = () => {
+
+    // The safety-timer path reveals instantly (no fade) — a throttled/headless
+    // render could otherwise be captured mid-transition, showing content stuck
+    // half-visible. `data-reveal-instant` tells the CSS to skip the transition
+    // for that one reveal (see global.scss).
+    const reveal = (instant = false) => {
+      if (instant) el.dataset.revealInstant = 'true';
       el.dataset.revealed = 'true';
     };
 
@@ -41,7 +48,7 @@ export function useReveal<T extends HTMLElement>() {
 
     // Safety net: if the observer never fires (hidden tab, no scroll), don't
     // leave the content stuck in its hidden start state.
-    const timer = window.setTimeout(reveal, 1800);
+    const timer = window.setTimeout(() => reveal(true), 1800);
 
     return () => {
       observer.disconnect();

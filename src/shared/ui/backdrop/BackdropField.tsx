@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import { prefersReducedMotion } from '@/shared/lib/utils';
 import styles from './BackdropField.module.scss';
 
 interface Particle {
@@ -13,7 +14,7 @@ const MAX_PARTICLES = 170;
 const LINK_DIST = 140; // px within which two particles are linked
 const CURSOR_DIST = 230; // px radius the cursor parts the field within
 const PUSH = 46; // max displacement (px) away from the cursor
-const ACCENT = '198, 255, 53';
+const FALLBACK_ACCENT_RGB = '198, 255, 53';
 
 /**
  * Demo C — generative constellation (cursor parts the field). Lime particles
@@ -32,7 +33,12 @@ export function BackdropField() {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const reduce = prefersReducedMotion();
+    // single-source the accent color from tokens.scss (--color-accent-rgb)
+    // instead of hardcoding the same RGB triple again here.
+    const accent =
+      getComputedStyle(document.documentElement).getPropertyValue('--color-accent-rgb').trim() ||
+      FALLBACK_ACCENT_RGB;
     let width = 0;
     let height = 0;
     let particles: Particle[] = [];
@@ -66,6 +72,11 @@ export function BackdropField() {
     };
 
     const draw = () => {
+      // Self-heal if a resize happened while this tab was backgrounded — the
+      // `resize` event doesn't reliably fire for hidden/inactive tabs, which
+      // would otherwise leave the canvas stuck at a stale size.
+      if (window.innerWidth !== width || window.innerHeight !== height) resize();
+
       ctx.clearRect(0, 0, width, height);
 
       if (pointer.active) {
@@ -77,7 +88,7 @@ export function BackdropField() {
           pointer.y,
           CURSOR_DIST,
         );
-        halo.addColorStop(0, `rgba(${ACCENT}, 0.05)`);
+        halo.addColorStop(0, `rgba(${accent}, 0.05)`);
         halo.addColorStop(1, 'transparent');
         ctx.fillStyle = halo;
         ctx.fillRect(0, 0, width, height);
@@ -109,7 +120,7 @@ export function BackdropField() {
             ctx.beginPath();
             ctx.moveTo(x, y);
             ctx.lineTo(pointer.x, pointer.y);
-            ctx.strokeStyle = `rgba(${ACCENT}, ${k * 0.22})`;
+            ctx.strokeStyle = `rgba(${accent}, ${k * 0.22})`;
             ctx.lineWidth = 1;
             ctx.stroke();
           }
@@ -119,7 +130,7 @@ export function BackdropField() {
         ry[i] = y;
         ctx.beginPath();
         ctx.arc(x, y, lit ? 1.7 : 1.2, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(${ACCENT}, ${lit ? 0.72 : 0.3})`;
+        ctx.fillStyle = `rgba(${accent}, ${lit ? 0.72 : 0.3})`;
         ctx.fill();
       }
 
@@ -127,7 +138,7 @@ export function BackdropField() {
       if (pointer.active) {
         ctx.beginPath();
         ctx.arc(pointer.x, pointer.y, 2.2, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(${ACCENT}, 0.7)`;
+        ctx.fillStyle = `rgba(${accent}, 0.7)`;
         ctx.fill();
       }
 
@@ -141,7 +152,7 @@ export function BackdropField() {
             ctx.beginPath();
             ctx.moveTo(rx[i], ry[i]);
             ctx.lineTo(rx[j], ry[j]);
-            ctx.strokeStyle = `rgba(${ACCENT}, ${(1 - d / LINK_DIST) * 0.09})`;
+            ctx.strokeStyle = `rgba(${accent}, ${(1 - d / LINK_DIST) * 0.09})`;
             ctx.lineWidth = 1;
             ctx.stroke();
           }
@@ -167,7 +178,12 @@ export function BackdropField() {
     resize();
     window.addEventListener('resize', resize);
     window.addEventListener('pointermove', onPointer, { passive: true });
-    window.addEventListener('pointerout', onLeave);
+    // `pointerleave` on the root element (unlike `pointerout` on window) only
+    // fires when the pointer truly leaves the page, not on every element
+    // boundary crossed within it — `pointerout` bubbles per-element and made
+    // the halo flicker off for a frame each time the cursor crossed into a
+    // card, button, etc.
+    document.documentElement.addEventListener('pointerleave', onLeave);
 
     if (reduce) draw();
     else loop();
@@ -176,7 +192,7 @@ export function BackdropField() {
       window.cancelAnimationFrame(frame);
       window.removeEventListener('resize', resize);
       window.removeEventListener('pointermove', onPointer);
-      window.removeEventListener('pointerout', onLeave);
+      document.documentElement.removeEventListener('pointerleave', onLeave);
     };
   }, []);
 

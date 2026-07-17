@@ -28,7 +28,7 @@ export function Contact() {
           const Icon = ICONS[label];
           return (
             <li key={label}>
-              <a className={styles.link} href={href} target="_blank" rel="noreferrer">
+              <a className="pill-link" href={href} target="_blank" rel="noreferrer">
                 <Icon className={styles.icon} />
                 {label}
               </a>

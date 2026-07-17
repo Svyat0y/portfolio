@@ -1,5 +1,6 @@
-import { useEffect, useRef, useState } from 'react';
-import { prefersReducedMotion, randomScrambleChar } from './scramble-glyphs';
+import { useEffect, useState } from 'react';
+import { prefersReducedMotion } from '@/shared/lib/utils';
+import { randomScrambleChar, startResolve } from './scramble-glyphs';
 
 /**
  * Continuously shuffles `text` while `active` is true (never settles) — used
@@ -18,50 +19,19 @@ interface InfiniteScrambleOptions {
 export function useInfiniteScramble(text: string, { active }: InfiniteScrambleOptions) {
   const [reducedMotion] = useState(prefersReducedMotion);
   const [display, setDisplay] = useState(text);
-  const intervalRef = useRef<number | null>(null);
 
   useEffect(() => {
     if (reducedMotion) return;
 
-    const stop = () => {
-      if (intervalRef.current !== null) {
-        window.clearInterval(intervalRef.current);
-        intervalRef.current = null;
-      }
-    };
-
     if (active) {
-      intervalRef.current = window.setInterval(() => {
+      const id = window.setInterval(() => {
         setDisplay(Array.from(text, (ch) => (ch === ' ' ? ch : randomScrambleChar())).join(''));
       }, LOOP_TICK_MS);
-      return stop;
+      return () => window.clearInterval(id);
     }
 
     // settle into the real text, one letter at a time
-    const totalTicks = Math.max(2, Math.round(RESOLVE_DURATION / LOOP_TICK_MS));
-    const lockAt = Array.from({ length: text.length }, () =>
-      Math.floor(totalTicks * (0.25 + Math.random() * 0.75)),
-    );
-    let tick = 0;
-
-    intervalRef.current = window.setInterval(() => {
-      tick += 1;
-      let out = '';
-      let done = true;
-      for (let i = 0; i < text.length; i += 1) {
-        const ch = text[i];
-        if (ch === ' ' || tick >= lockAt[i]) {
-          out += ch;
-        } else {
-          done = false;
-          out += randomScrambleChar();
-        }
-      }
-      setDisplay(out);
-      if (done) stop();
-    }, LOOP_TICK_MS);
-
-    return stop;
+    return startResolve(text, RESOLVE_DURATION, LOOP_TICK_MS, setDisplay);
   }, [active, text, reducedMotion]);
 
   return reducedMotion ? text : display;

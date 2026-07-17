@@ -36,6 +36,16 @@ main {
     0 0 4px var(--color-bg);
 }
 
+/* The halo above is meant for body text sitting directly over the animated
+   canvas — not for form controls, which already have their own solid/bordered
+   surface. Without this reset it inherits onto the lime submit button (a dark
+   glow behind dark-on-lime text) and form inputs. */
+main button,
+main input,
+main textarea {
+  text-shadow: none;
+}
+
 a {
   color: inherit;
   text-decoration: none;
@@ -52,6 +62,14 @@ button {
 ::selection {
   background: var(--color-accent);
   color: var(--color-bg);
+}
+
+/* One consistent keyboard-focus ring for every interactive element (nav
+   buttons, project cards, pill links, carousel arrows, …) instead of each
+   component styling its own or falling back to the browser default. */
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
 }
 
 /* Global layout primitives shared by every section.
@@ -90,6 +108,33 @@ button {
   margin-right: 0.3em;
 }
 
+/* Shared "pill" link treatment — mono label, subtle bordered surface,
+   hover-to-accent. Used by the About CV download and the Contact
+   GitHub/LinkedIn links (previously two byte-identical copies). */
+.pill-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-height: 44px;
+  font-family: var(--font-mono);
+  font-size: var(--text-small);
+  text-transform: lowercase;
+  letter-spacing: 0.08em;
+  color: var(--color-text-muted);
+  background: var(--color-bg-raised);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: var(--space-pill);
+  transition:
+    color var(--transition-fast),
+    border-color var(--transition-fast);
+
+  &:hover {
+    color: var(--color-accent);
+    border-color: var(--color-accent);
+  }
+}
+
 /* Scroll reveal — see `useReveal`. The hidden start state applies ONLY under
    `html.reveal-ready`, a class the hook adds once JS runs; so no-JS / headless
    renders show content normally and nothing ships blank. A revealed group's
@@ -118,6 +163,14 @@ html.reveal-ready [data-reveal-group][data-revealed] > *:nth-child(4) {
 }
 html.reveal-ready [data-reveal-group][data-revealed] > *:nth-child(n + 5) {
   transition-delay: 280ms;
+}
+
+/* The safety-timer path in `useReveal` (fired when the observer never gets a
+   chance to — hidden tab, no scroll) reveals instantly: a throttled/headless
+   render could otherwise be captured mid-fade, showing content stuck
+   half-visible. */
+html.reveal-ready [data-reveal-group][data-reveal-instant] > * {
+  transition: none;
 }
 
 @media (prefers-reduced-motion: reduce) {

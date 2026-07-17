@@ -18,10 +18,10 @@ export function Hero() {
         <p className={styles.tagline}>{identity.tagline}</p>
       </div>
 
-      {/*<div className={styles.scrollHint} aria-hidden="true">*/}
-      {/*  <span className={styles.scrollArrow}>↓</span>*/}
-      {/*  <span className={styles.scrollLabel}>scroll</span>*/}
-      {/*</div>*/}
+      <div className={styles.scrollHint} aria-hidden="true">
+        <span className={styles.scrollArrow}>↓</span>
+        <span>scroll</span>
+      </div>
     </section>
   );
 }

@@ -35,7 +35,11 @@ export function ContactForm() {
   };
 
   if (status === 'success') {
-    return <p className={styles.success}>// message sent — thanks, I'll get back to you soon.</p>;
+    return (
+      <p className={styles.success} role="status">
+        // message sent — thanks, I'll get back to you soon.
+      </p>
+    );
   }
 
   return (
@@ -56,11 +60,11 @@ export function ContactForm() {
       <div className={styles.row}>
         <label className={styles.field}>
           <span>name</span>
-          <input type="text" name="name" required />
+          <input type="text" name="name" autoComplete="name" required />
         </label>
         <label className={styles.field}>
           <span>email</span>
-          <input type="email" name="email" required />
+          <input type="email" name="email" autoComplete="email" required />
         </label>
       </div>
 
@@ -74,7 +78,9 @@ export function ContactForm() {
       </button>
 
       {status === 'error' && (
-        <p className={styles.error}>Something went wrong — try again, or email me directly.</p>
+        <p className={styles.error} role="alert">
+          Something went wrong — try again, or email me directly.
+        </p>
       )}
     </form>
   );

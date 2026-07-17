@@ -16,7 +16,7 @@ export function About() {
               className={styles.resumeImg}
             />
           </div>
-          <a className={styles.resumeLink} href="/resume.pdf" download>
+          <a className="pill-link" href="/resume.pdf" download>
             download CV ↓
           </a>
         </div>
