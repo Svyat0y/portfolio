@@ -5,7 +5,10 @@
   --color-text: #f0efe9;
   --color-text-muted: #8a8a85;
   --color-accent: #c6ff35;
-  --color-accent-dim: rgba(198, 255, 53, 0.14);
+  /* same color as --color-accent, as r,g,b for rgba() compositing (glows,
+     canvas particles) — single source instead of repeating the RGB triple. */
+  --color-accent-rgb: 198, 255, 53;
+  --color-accent-dim: rgba(var(--color-accent-rgb), 0.14);
   --color-border: rgba(240, 239, 233, 0.12);
   --color-glass: rgba(240, 239, 233, 0.04);
   --color-glass-highlight: rgba(240, 239, 233, 0.25);
@@ -26,6 +29,13 @@
   --space-4: 2.5rem;
   --space-5: 4rem;
   --gutter: clamp(1.25rem, 4vw, 4rem);
+  /* Small UI chrome (chips, badges, buttons, the pill-link) sits below
+     --space-1 and is deliberately sized per-role — a chip isn't a badge isn't
+     a button — so those stay as component-scoped literals rather than forced
+     onto one shared scale. `--space-pill` is the one exception: it was already
+     a single, deduplicated declaration (see `.pill-link`, C2), so naming it
+     documents the value without inventing a scale nobody asked for. */
+  --space-pill: 0.45rem 0.85rem;
 
   /* misc */
   --header-height: 4.5rem;

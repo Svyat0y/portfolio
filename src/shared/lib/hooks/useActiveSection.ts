@@ -7,6 +7,13 @@ import type { SectionId } from '@/shared/config';
  * section by id — no scroll-hijacking, no smoothing library. Simple and
  * robust on mobile, where the previous full-page-slide mode clipped content
  * that ran taller than the viewport.
+ *
+ * `rootMargin` shrinks the observer's effective viewport to a thin band
+ * across the middle (10% tall); a section only counts as "active" while it
+ * crosses that band. A flat `threshold: 0.5` (50% of the section visible)
+ * silently never fires for any section taller than 2× the viewport — About
+ * already runs 1.5× on mobile — so the header highlight would freeze on the
+ * previous section. The middle-band technique scales to any section height.
  */
 export function useActiveSection(sectionIds: SectionId[]) {
   const [activeSection, setActiveSection] = useState<SectionId>(sectionIds[0]);
@@ -20,7 +27,7 @@ export function useActiveSection(sectionIds: SectionId[]) {
           }
         }
       },
-      { threshold: 0.5 },
+      { threshold: 0, rootMargin: '-45% 0px -45% 0px' },
     );
     document.querySelectorAll('section[id]').forEach((el) => observer.observe(el));
     return () => observer.disconnect();

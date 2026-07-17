@@ -24,6 +24,7 @@ export function Header({ activeSection, onNavigate }: HeaderProps) {
           <button
             key={id}
             className={`${styles.link} ${activeSection === id ? styles.active : ''}`}
+            aria-current={activeSection === id ? 'true' : undefined}
             onClick={() => onNavigate(id)}
           >
             <ScrambleText text={label} playOnHover duration={600} />

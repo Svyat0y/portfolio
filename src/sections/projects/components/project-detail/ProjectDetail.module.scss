@@ -27,7 +27,7 @@
      full-page background: this is a "read the details" moment, not a "wow"
      one. No transparency into the page behind — nothing can bleed through. */
   background:
-    radial-gradient(52rem 52rem at 94% -10%, rgba(198, 255, 53, 0.1), transparent 60%),
+    radial-gradient(52rem 52rem at 94% -10%, rgba(var(--color-accent-rgb), 0.1), transparent 60%),
     var(--color-bg-raised);
   border-left: 1px solid var(--color-border);
   box-shadow: -24px 0 48px -16px rgba(0, 0, 0, 0.6);

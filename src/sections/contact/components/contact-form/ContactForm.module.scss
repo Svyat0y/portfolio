@@ -76,11 +76,6 @@
     opacity: 0.85;
   }
 
-  &:focus-visible {
-    outline: 2px solid var(--color-accent);
-    outline-offset: 3px;
-  }
-
   &:disabled {
     opacity: 0.5;
     cursor: default;
@@ -95,5 +90,7 @@
 .error {
   font-family: var(--font-mono);
   font-size: var(--text-small);
-  color: var(--color-text-muted);
+  /* Bright, not muted — this is the one message a user must not miss. */
+  color: var(--color-text);
+  font-weight: 500;
 }
