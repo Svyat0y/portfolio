@@ -13,6 +13,7 @@ import styles from './Projects.module.scss';
 
 const SLIDE_SIZE = 6;
 const AUTOPLAY_DELAY = 6000;
+const PROJECT_PARAM = 'project';
 
 function chunk<T>(items: T[], size: number): T[][] {
   const chunks: T[][] = [];
@@ -22,8 +23,26 @@ function chunk<T>(items: T[], size: number): T[][] {
   return chunks;
 }
 
+function slugify(title: string): string {
+  return title
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/(^-|-$)/g, '');
+}
+
+function projectFromLocation(): Project | null {
+  const slug = new URLSearchParams(window.location.search).get(PROJECT_PARAM);
+  if (!slug) return null;
+  return projects.find((project) => slugify(project.title) === slug) ?? null;
+}
+
 export function Projects() {
-  const [selected, setSelected] = useState<Project | null>(null);
+  // Deep-link support: opening a project pushes `?project=<slug>` onto history
+  // so the browser/device back button closes the detail view instead of
+  // leaving the page — important on mobile, where there's no Escape key and
+  // the back gesture/button is the natural way to dismiss it. A shared link
+  // with the param present opens straight into that project's detail.
+  const [selected, setSelected] = useState<Project | null>(() => projectFromLocation());
   const [closing, setClosing] = useState(false);
   const pages = useMemo(() => chunk(projects, SLIDE_SIZE), []);
   const hasMultiplePages = pages.length > 1;
@@ -33,8 +52,42 @@ export function Projects() {
   const [paginationEl, setPaginationEl] = useState<HTMLDivElement | null>(null);
   const [swiper, setSwiper] = useState<SwiperClass | null>(null);
 
+  const selectProject = useCallback((project: Project) => {
+    setClosing(false);
+    setSelected(project);
+    const url = new URL(window.location.href);
+    url.searchParams.set(PROJECT_PARAM, slugify(project.title));
+    window.history.pushState({ projectDetail: true }, '', url);
+  }, []);
+
   // stable identity — ProjectDetail depends on this in a effect (Escape handler)
-  const closeDetail = useCallback(() => setClosing(true), []);
+  const closeDetail = useCallback(() => {
+    // Only entry we pushed ourselves is safe to pop — a deep-linked page load
+    // (shared URL with `?project=` already in it) has no such entry, so strip
+    // the param in place instead of navigating away from the site.
+    if (window.history.state?.projectDetail) {
+      window.history.back();
+    } else {
+      setClosing(true);
+      const url = new URL(window.location.href);
+      url.searchParams.delete(PROJECT_PARAM);
+      window.history.replaceState({}, '', url);
+    }
+  }, []);
+
+  useEffect(() => {
+    const handlePopState = () => {
+      const project = projectFromLocation();
+      if (project) {
+        setClosing(false);
+        setSelected(project);
+      } else {
+        setClosing(true);
+      }
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
 
   useEffect(() => {
     if (!swiper) return;
@@ -75,13 +128,7 @@ export function Projects() {
               <ul className={styles.grid}>
                 {pageProjects.map((project) => (
                   <li key={project.title}>
-                    <ProjectCard
-                      project={project}
-                      onSelect={() => {
-                        setClosing(false);
-                        setSelected(project);
-                      }}
-                    />
+                    <ProjectCard project={project} onSelect={() => selectProject(project)} />
                   </li>
                 ))}
               </ul>

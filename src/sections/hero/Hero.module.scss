@@ -38,7 +38,14 @@
 .scrollHint {
   position: absolute;
   bottom: var(--space-4);
-  left: var(--gutter);
+  /* Match .section-inner's centering (global.scss): on viewports wider than
+     gutter*2 + content-max-width, the content column sits inboard of the
+     gutter, not flush against it — align with its real left edge instead of
+     just the gutter. */
+  left: calc(
+    var(--gutter) +
+      max(0px, (100% - 2 * var(--gutter) - var(--content-max-width)) / 2)
+  );
   display: flex;
   align-items: center;
   gap: var(--space-1);
