@@ -13,6 +13,16 @@ html {
   scroll-snap-type: y mandatory;
 }
 
+/* Touch input handles scroll-snap poorly (imprecise landings, fights the
+   OS's own momentum/rubber-banding) — restrict the slide-paging feel to
+   fine-pointer input (mouse/trackpad) and fall back to plain scroll on
+   touch/coarse-pointer devices, tablets included. */
+@media (pointer: coarse) {
+  html {
+    scroll-snap-type: none;
+  }
+}
+
 body {
   background: var(--color-bg);
   color: var(--color-text);
@@ -81,12 +91,16 @@ button {
    instead of clipping: `scroll-snap-stop` only pins the section's *start*
    edge to a scroll stop, it never constrains height or adds overflow. Content
    shorter than the viewport is centered, giving every section a deliberate
-   full-screen presence and even pacing. The bottom padding adds
-   `env(safe-area-inset-bottom)` so content never sits under the iOS
-   home-indicator bar (needs `viewport-fit=cover` in index.html's viewport
-   meta tag to be non-zero at all). */
+   full-screen presence and even pacing.
+   `min-height: 100svh` is desktop-only (see the media query below) — slide
+   navigation itself is also fine-pointer-only (see the `pointer: coarse`
+   query above), so forcing every mobile section to a full screen just
+   stretched the gap between short sections for no matching interaction.
+   Mobile sections size to their own content instead.
+   The bottom padding adds `env(safe-area-inset-bottom)` so content never
+   sits under the iOS home-indicator bar (needs `viewport-fit=cover` in
+   index.html's viewport meta tag to be non-zero at all). */
 .section {
-  min-height: 100svh;
   padding: calc(var(--header-height) + var(--space-2)) var(--gutter)
     calc(var(--space-5) + env(safe-area-inset-bottom));
   display: flex;
@@ -97,38 +111,9 @@ button {
   scroll-snap-stop: always;
 }
 
-/* Lime "scan-line" sweep — the other half of the slide-arrival flourish
-   (see `useSlideActive` for the `data-slide-active` attribute and the title
-   re-scramble in SectionShell/Hero). Pure CSS `@keyframes`: it plays once
-   whenever `data-slide-active` is (re-)added, and needs no extra
-   reduced-motion guard beyond the one already below — the global
-   `prefers-reduced-motion` block further down forces every animation/
-   transition duration to ~0, which neutralizes this automatically. */
-.section::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  height: 2px;
-  background: var(--color-accent);
-  box-shadow: 0 0 12px 1px var(--color-accent-dim);
-  opacity: 0;
-  pointer-events: none;
-}
-
-.section[data-slide-active]::after {
-  animation: section-scan 550ms ease-out;
-}
-
-@keyframes section-scan {
-  from {
-    top: 0%;
-    opacity: 1;
-  }
-  to {
-    top: 100%;
-    opacity: 0;
+@media (min-width: 901px) {
+  .section {
+    min-height: 100svh;
   }
 }
 

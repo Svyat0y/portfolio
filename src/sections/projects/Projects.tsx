@@ -11,9 +11,24 @@ import { ProjectCard } from './components/project-card';
 import { ProjectDetail } from './components/project-detail';
 import styles from './Projects.module.scss';
 
-const SLIDE_SIZE = 6;
 const AUTOPLAY_DELAY = 6000;
 const PROJECT_PARAM = 'project';
+
+/**
+ * Cards per carousel page, tiered to match `.grid`'s own column breakpoints
+ * (Projects.module.scss): 2 columns above 900px (desktop, unchanged — 4 = a
+ * clean 2×2 page), 1 column at or below that. A fixed 4-per-page on a single
+ * mobile column stacked 4 cards tall on page 1 and stranded a lone 5th card
+ * with a huge empty gap on page 2 (the section still enforces a full-viewport
+ * min-height). Smaller pages on narrow viewports keep every page's stacked
+ * height roughly even instead.
+ */
+function getItemsPerSlide(): number {
+  if (typeof window === 'undefined') return 4;
+  if (window.matchMedia('(max-width: 768px)').matches) return 1;
+  if (window.matchMedia('(max-width: 900px)').matches) return 2;
+  return 4;
+}
 
 function chunk<T>(items: T[], size: number): T[][] {
   const chunks: T[][] = [];
@@ -44,8 +59,21 @@ export function Projects() {
   // with the param present opens straight into that project's detail.
   const [selected, setSelected] = useState<Project | null>(() => projectFromLocation());
   const [closing, setClosing] = useState(false);
-  const pages = useMemo(() => chunk(projects, SLIDE_SIZE), []);
+  const [itemsPerSlide, setItemsPerSlide] = useState(getItemsPerSlide);
+  const pages = useMemo(() => chunk(projects, itemsPerSlide), [itemsPerSlide]);
   const hasMultiplePages = pages.length > 1;
+
+  useEffect(() => {
+    const mobile = window.matchMedia('(max-width: 768px)');
+    const tablet = window.matchMedia('(max-width: 900px)');
+    const handleChange = () => setItemsPerSlide(getItemsPerSlide());
+    mobile.addEventListener('change', handleChange);
+    tablet.addEventListener('change', handleChange);
+    return () => {
+      mobile.removeEventListener('change', handleChange);
+      tablet.removeEventListener('change', handleChange);
+    };
+  }, []);
 
   const [prevEl, setPrevEl] = useState<HTMLButtonElement | null>(null);
   const [nextEl, setNextEl] = useState<HTMLButtonElement | null>(null);
@@ -109,6 +137,7 @@ export function Projects() {
     <SectionShell id="projects" title="Projects">
       <div className={styles.carousel}>
         <Swiper
+          key={itemsPerSlide}
           className={styles.swiper}
           autoHeight={true}
           onSwiper={setSwiper}
