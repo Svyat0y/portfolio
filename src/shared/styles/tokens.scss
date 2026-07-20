@@ -29,6 +29,7 @@
   --space-4: 2.5rem;
   --space-5: 4rem;
   --gutter: clamp(1.25rem, 4vw, 4rem);
+  --content-max-width: 72rem;
   /* Small UI chrome (chips, badges, buttons, the pill-link) sits below
      --space-1 and is deliberately sized per-role — a chip isn't a badge isn't
      a button — so those stay as component-scoped literals rather than forced

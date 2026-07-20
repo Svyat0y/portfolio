@@ -94,7 +94,7 @@ button {
    the left gutter. Sections wrap their content in this. */
 .section-inner {
   width: 100%;
-  max-width: 72rem;
+  max-width: var(--content-max-width);
   margin: 0 auto;
 }
 
