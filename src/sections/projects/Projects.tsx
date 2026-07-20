@@ -1,6 +1,7 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination, Autoplay, Keyboard } from 'swiper/modules';
+import type { Swiper as SwiperClass } from 'swiper/types';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
@@ -30,9 +31,26 @@ export function Projects() {
   const [prevEl, setPrevEl] = useState<HTMLButtonElement | null>(null);
   const [nextEl, setNextEl] = useState<HTMLButtonElement | null>(null);
   const [paginationEl, setPaginationEl] = useState<HTMLDivElement | null>(null);
+  const [swiper, setSwiper] = useState<SwiperClass | null>(null);
 
   // stable identity — ProjectDetail depends on this in a effect (Escape handler)
   const closeDetail = useCallback(() => setClosing(true), []);
+
+  useEffect(() => {
+    if (!swiper) return;
+    // `autoHeight` measures each slide's content height at mount — before the
+    // web fonts (Space Grotesk / JetBrains Mono, loaded via <link> in
+    // index.html) finish swapping in. Text can re-wrap taller once they do,
+    // leaving the wrapper a few px short of the real content height; `.swiper`
+    // clips overflow (Swiper's own carousel default), so that shortfall cut
+    // off the last row's bottom edge. Recalculate once fonts are truly ready.
+    // Must call `updateAutoHeight()` directly, not the general `update()` —
+    // Swiper's `update()` only re-triggers autoHeight internally when
+    // `freeMode` is enabled, which this carousel doesn't use.
+    document.fonts?.ready.then(() => {
+      if (!swiper.destroyed) swiper.updateAutoHeight();
+    });
+  }, [swiper]);
 
   return (
     <SectionShell id="projects" title="Projects">
@@ -40,6 +58,7 @@ export function Projects() {
         <Swiper
           className={styles.swiper}
           autoHeight={true}
+          onSwiper={setSwiper}
           modules={[Navigation, Pagination, Autoplay, Keyboard]}
           navigation={hasMultiplePages ? { prevEl, nextEl } : false}
           pagination={hasMultiplePages ? { el: paginationEl, clickable: true } : false}
