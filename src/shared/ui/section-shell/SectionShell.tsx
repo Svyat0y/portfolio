@@ -1,6 +1,7 @@
 import type { PropsWithChildren, ReactNode } from 'react';
 import type { SectionId } from '@/shared/config';
-import { useReveal } from '@/shared/lib/hooks';
+import { useReveal, useSlideActive } from '@/shared/lib/hooks';
+import { ScrambleText } from '@/shared/ui/scramble-text';
 import styles from './SectionShell.module.scss';
 
 interface SectionShellProps {
@@ -15,6 +16,11 @@ interface SectionShellProps {
  * Full-screen section shell with a "// TITLE" heading, centered in a shared
  * max-width container so content stays balanced instead of hugging the left
  * gutter. Optionally lays out a right-hand `aside` column.
+ *
+ * The title re-scrambles every time the section becomes the active slide
+ * (see `useSlideActive`) — keying `ScrambleText` on `activations` remounts
+ * it, replaying its own `playOnMount` effect (the same remount-for-replay
+ * trick already used for the Projects list↔detail `dive` transition).
  */
 export function SectionShell({
   id,
@@ -24,16 +30,17 @@ export function SectionShell({
 }: PropsWithChildren<SectionShellProps>) {
   const mainRef = useReveal<HTMLDivElement>();
   const asideRef = useReveal<HTMLDivElement>();
+  const { ref: sectionRef, activations } = useSlideActive<HTMLElement>();
 
   return (
-    <section id={id} className="section">
+    <section id={id} className="section" ref={sectionRef}>
       <div className={`section-inner ${styles.grid} ${aside ? styles.twoCol : ''}`}>
         <div className={styles.main} data-reveal-group ref={mainRef}>
           <h2 className={styles.title}>
             <span className="section-mark" aria-hidden="true">
               //
             </span>
-            {title}
+            <ScrambleText key={activations} text={title} playOnMount duration={600} />
           </h2>
           {children}
         </div>

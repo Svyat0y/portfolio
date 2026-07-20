@@ -26,3 +26,7 @@ dist-ssr
 # Informational / working notes — not for the repo
 .claude/
 docs/
+
+# Local git worktrees (subagent-driven-development scratch workspaces)
+.worktrees/
+.superpowers/
