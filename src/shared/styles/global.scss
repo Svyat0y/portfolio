@@ -91,12 +91,16 @@ button {
    instead of clipping: `scroll-snap-stop` only pins the section's *start*
    edge to a scroll stop, it never constrains height or adds overflow. Content
    shorter than the viewport is centered, giving every section a deliberate
-   full-screen presence and even pacing. The bottom padding adds
-   `env(safe-area-inset-bottom)` so content never sits under the iOS
-   home-indicator bar (needs `viewport-fit=cover` in index.html's viewport
-   meta tag to be non-zero at all). */
+   full-screen presence and even pacing.
+   `min-height: 100svh` is desktop-only (see the media query below) — slide
+   navigation itself is also fine-pointer-only (see the `pointer: coarse`
+   query above), so forcing every mobile section to a full screen just
+   stretched the gap between short sections for no matching interaction.
+   Mobile sections size to their own content instead.
+   The bottom padding adds `env(safe-area-inset-bottom)` so content never
+   sits under the iOS home-indicator bar (needs `viewport-fit=cover` in
+   index.html's viewport meta tag to be non-zero at all). */
 .section {
-  min-height: 100svh;
   padding: calc(var(--header-height) + var(--space-2)) var(--gutter)
     calc(var(--space-5) + env(safe-area-inset-bottom));
   display: flex;
@@ -105,6 +109,12 @@ button {
   position: relative;
   scroll-snap-align: start;
   scroll-snap-stop: always;
+}
+
+@media (min-width: 901px) {
+  .section {
+    min-height: 100svh;
+  }
 }
 
 /* Centered content container — keeps sections balanced instead of hugging
