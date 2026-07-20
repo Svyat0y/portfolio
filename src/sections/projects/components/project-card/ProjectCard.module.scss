@@ -8,12 +8,21 @@
   padding: var(--space-2) 0;
   border-bottom: 1px solid var(--color-border);
   transition:
-    transform var(--transition-fast),
+    transform 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.25s cubic-bezier(0.22, 1, 0.36, 1),
     border-color var(--transition-fast);
 
-  &:hover {
-    border-color: var(--color-accent);
-    transform: translateX(4px);
+  /* Lifts the row toward the viewer instead of animating the separator
+     hairline itself — that line is a shared row boundary (its neighbor in
+     the same grid row keeps its own half), not a per-card decorative border,
+     so it fades out as this card "peels" away from the baseline. Shadow
+     recipe matches the résumé frame elsewhere on the site (About section) —
+     same soft-lift language, not a one-off. */
+  &:hover,
+  &:focus-visible {
+    transform: translateY(-6px);
+    border-color: transparent;
+    box-shadow: 0 24px 48px -16px rgba(0, 0, 0, 0.6);
   }
 }
 
@@ -27,6 +36,12 @@
 .name {
   font-size: 1.25rem;
   font-weight: 500;
+  transition: color var(--transition-fast);
+
+  .card:hover &,
+  .card:focus-visible & {
+    color: var(--color-accent);
+  }
 }
 
 .highlight {
