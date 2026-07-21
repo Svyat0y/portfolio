@@ -1,13 +1,11 @@
 import { SectionShell } from '@/shared/ui/section-shell';
-import { skillGroups } from './skills.content';
+import { skillGroups, skillsLead } from './skills.content';
 import styles from './Skills.module.scss';
 
 export function Skills() {
   return (
     <SectionShell id="skills" title="Skills">
-      <p className={styles.lead}>
-        The stack I reach for — from the interface down to the infrastructure.
-      </p>
+      <p className={styles.lead}>{skillsLead}</p>
 
       <dl className={styles.groups}>
         {skillGroups.map(({ label, items }) => (

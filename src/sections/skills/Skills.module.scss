@@ -12,8 +12,6 @@
   flex-direction: column;
 }
 
-/* Editorial "index" rows: domain label + wrapping skill list, separated by
-   hairlines (same language as the project cards). No cards, no nesting. */
 .group {
   display: grid;
   grid-template-columns: 1fr;

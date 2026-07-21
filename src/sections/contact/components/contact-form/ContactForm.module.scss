@@ -95,7 +95,6 @@
 .error {
   font-family: var(--font-mono);
   font-size: var(--text-small);
-  /* Bright, not muted — this is the one message a user must not miss. */
   color: var(--color-text);
   font-weight: 500;
 }

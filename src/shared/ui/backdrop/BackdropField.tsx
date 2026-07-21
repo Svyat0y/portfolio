@@ -9,21 +9,13 @@ interface Particle {
   vy: number;
 }
 
-const DENSITY = 9000; // one particle per ~9000 px² of viewport
+const DENSITY = 9000;
 const MAX_PARTICLES = 170;
-const LINK_DIST = 140; // px within which two particles are linked
-const CURSOR_DIST = 230; // px radius the cursor parts the field within
-const PUSH = 46; // max displacement (px) away from the cursor
+const LINK_DIST = 140;
+const CURSOR_DIST = 230;
+const PUSH = 46;
 const FALLBACK_ACCENT_RGB = '198, 255, 53';
 
-/**
- * Demo C — generative constellation (cursor parts the field). Lime particles
- * drift and link by proximity. The cursor doesn't clump them: it displaces
- * nearby particles outward for a render frame (so the web flows AROUND the
- * cursor and springs back as it leaves) and reaches bright links out to them.
- * Displacement is render-only — particle positions keep their steady drift, so
- * nothing accumulates. `prefers-reduced-motion` paints one static frame.
- */
 export function BackdropField() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -34,15 +26,12 @@ export function BackdropField() {
     if (!ctx) return;
 
     const reduce = prefersReducedMotion();
-    // single-source the accent color from tokens.scss (--color-accent-rgb)
-    // instead of hardcoding the same RGB triple again here.
     const accent =
       getComputedStyle(document.documentElement).getPropertyValue('--color-accent-rgb').trim() ||
       FALLBACK_ACCENT_RGB;
     let width = 0;
     let height = 0;
     const particles: Particle[] = [];
-    // render positions (post-displacement), reused for the link pass
     let rx: number[] = [];
     let ry: number[] = [];
     const pointer = { x: -9999, y: -9999, active: false };
@@ -56,11 +45,9 @@ export function BackdropField() {
 
     const targetCount = () => Math.min(MAX_PARTICLES, Math.round((width * height) / DENSITY));
 
-    // Fit the field to the current dimensions WITHOUT reshuffling: rescale each
-    // particle's position proportionally (the constellation smoothly squeezes/
-    // stretches instead of jumping to fresh random spots on every resize event),
-    // then top up or trim the count to match the new area. `prevW/prevH === 0`
-    // is the first call (empty field) — nothing to rescale, just seed to count.
+    const cursorDistSq = CURSOR_DIST * CURSOR_DIST;
+    const linkDistSq = LINK_DIST * LINK_DIST;
+
     const fit = (prevW: number, prevH: number) => {
       if (prevW > 0 && prevH > 0 && (prevW !== width || prevH !== height)) {
         const sx = width / prevW;
@@ -92,9 +79,6 @@ export function BackdropField() {
     };
 
     const draw = () => {
-      // Self-heal if a resize happened while this tab was backgrounded — the
-      // `resize` event doesn't reliably fire for hidden/inactive tabs, which
-      // would otherwise leave the canvas stuck at a stale size.
       if (window.innerWidth !== width || window.innerHeight !== height) resize();
 
       ctx.clearRect(0, 0, width, height);
@@ -130,11 +114,12 @@ export function BackdropField() {
         if (pointer.active) {
           const dx = p.x - pointer.x;
           const dy = p.y - pointer.y;
-          const d = Math.hypot(dx, dy);
-          if (d < CURSOR_DIST && d > 0.01) {
+          const dSq = dx * dx + dy * dy;
+          if (dSq < cursorDistSq && dSq > 0.0001) {
+            const d = Math.sqrt(dSq);
             lit = true;
             const k = 1 - d / CURSOR_DIST;
-            const off = k * k * PUSH; // ease-in displacement, stronger up close
+            const off = k * k * PUSH;
             x = p.x + (dx / d) * off;
             y = p.y + (dy / d) * off;
             ctx.beginPath();
@@ -154,7 +139,6 @@ export function BackdropField() {
         ctx.fill();
       }
 
-      // cursor node
       if (pointer.active) {
         ctx.beginPath();
         ctx.arc(pointer.x, pointer.y, 2.2, 0, Math.PI * 2);
@@ -162,13 +146,13 @@ export function BackdropField() {
         ctx.fill();
       }
 
-      // links between nearby particles (using displaced render positions)
       for (let i = 0; i < particles.length; i++) {
         for (let j = i + 1; j < particles.length; j++) {
           const dx = rx[i] - rx[j];
           const dy = ry[i] - ry[j];
-          const d = Math.hypot(dx, dy);
-          if (d < LINK_DIST) {
+          const dSq = dx * dx + dy * dy;
+          if (dSq < linkDistSq) {
+            const d = Math.sqrt(dSq);
             ctx.beginPath();
             ctx.moveTo(rx[i], ry[i]);
             ctx.lineTo(rx[j], ry[j]);
@@ -197,13 +181,11 @@ export function BackdropField() {
 
     resize();
     window.addEventListener('resize', resize);
-    window.addEventListener('pointermove', onPointer, { passive: true });
-    // `pointerleave` on the root element (unlike `pointerout` on window) only
-    // fires when the pointer truly leaves the page, not on every element
-    // boundary crossed within it — `pointerout` bubbles per-element and made
-    // the halo flicker off for a frame each time the cursor crossed into a
-    // card, button, etc.
-    document.documentElement.addEventListener('pointerleave', onLeave);
+    const finePointer = window.matchMedia('(pointer: fine)').matches;
+    if (finePointer) {
+      window.addEventListener('pointermove', onPointer, { passive: true });
+      document.documentElement.addEventListener('pointerleave', onLeave);
+    }
 
     if (reduce) draw();
     else loop();

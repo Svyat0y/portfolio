@@ -13,10 +13,6 @@ html {
   scroll-snap-type: y mandatory;
 }
 
-/* Touch input handles scroll-snap poorly (imprecise landings, fights the
-   OS's own momentum/rubber-banding) — restrict the slide-paging feel to
-   fine-pointer input (mouse/trackpad) and fall back to plain scroll on
-   touch/coarse-pointer devices, tablets included. */
 @media (pointer: coarse) {
   html {
     scroll-snap-type: none;
@@ -33,12 +29,6 @@ body {
   overflow-x: hidden;
 }
 
-/* Explicit stacking: the fixed Backdrop sits at z-index 0, all page content
-   above it. Guarantees the animated background never paints over text/controls,
-   in every browser (safer than relying on a lone negative z-index).
-   The inherited text-shadow is a dark halo (background-colored) around every
-   glyph — invisible over empty bg, but it knocks the constellation's thin lines
-   back from the edges of letters so text always reads clearly on top. */
 main {
   position: relative;
   z-index: 1;
@@ -47,10 +37,6 @@ main {
     0 0 4px var(--color-bg);
 }
 
-/* The halo above is meant for body text sitting directly over the animated
-   canvas — not for form controls, which already have their own solid/bordered
-   surface. Without this reset it inherits onto the lime submit button (a dark
-   glow behind dark-on-lime text) and form inputs. */
 main button,
 main input,
 main textarea {
@@ -75,35 +61,23 @@ button {
   color: var(--color-bg);
 }
 
-/* One consistent keyboard-focus ring for every interactive element (nav
-   buttons, project cards, pill links, carousel arrows, …) instead of each
-   component styling its own or falling back to the browser default. */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 :focus-visible {
   outline: 2px solid var(--color-accent);
   outline-offset: 3px;
 }
 
-/* Full-screen frames (see DESIGN.md), and the scroll-snap points for the
-   full-page slide navigation (see
-   docs/superpowers/specs/2026-07-20-slide-navigation-design.md). `min-height`
-   — not a fixed height — so a section that runs taller than the viewport
-   (long About text, wrapped Contact form on mobile) just grows the page
-   instead of clipping: `scroll-snap-stop` only pins the section's *start*
-   edge to a scroll stop, it never constrains height or adds overflow. Content
-   shorter than the viewport is centered, giving every section a deliberate
-   full-screen presence and even pacing.
-   `min-height: 100svh` is gated to the SAME condition that turns on slide
-   navigation — a wide viewport AND a fine pointer (mouse/trackpad) — so
-   full-screen sections appear exactly when, and only when, slides do. Gating
-   it on width alone would give a landscape tablet (coarse pointer, but wide)
-   full-height sections without any slide-snapping (snap is disabled on
-   `pointer: coarse`, see the query near the top), i.e. big empty gaps between
-   short sections with no interaction to justify them. Every touch device
-   (phones and tablets, both orientations) instead sizes sections to their own
-   content.
-   The bottom padding adds `env(safe-area-inset-bottom)` so content never
-   sits under the iOS home-indicator bar (needs `viewport-fit=cover` in
-   index.html's viewport meta tag to be non-zero at all). */
 .section {
   padding: calc(var(--header-height) + var(--space-2)) var(--gutter)
     calc(var(--space-5) + env(safe-area-inset-bottom));
@@ -121,11 +95,6 @@ button {
   }
 }
 
-/* Phones: no slide-paging (see the `pointer: coarse` rule above) and sections
-   size to their content, so the generous full-screen vertical padding just
-   becomes dead space between sections. Trim it — keep the top clearance for
-   the fixed header (mandatory so titles aren't obscured), but shrink the
-   breathing room above and the whole bottom pad. */
 @media (max-width: 768px) {
   .section {
     padding-top: calc(var(--header-height) + var(--space-1));
@@ -133,17 +102,12 @@ button {
   }
 }
 
-/* Centered content container — keeps sections balanced instead of hugging
-   the left gutter. Sections wrap their content in this. */
 .section-inner {
   width: 100%;
   max-width: var(--content-max-width);
   margin: 0 auto;
 }
 
-/* Inline marker before a section title. Nods to the "// comment" motif from
-   the hero (`// portfolio`) and the contact success message — one named brand
-   mark, not a tracked eyebrow repeated above every section. */
 .section-mark {
   font-family: var(--font-mono);
   color: var(--color-accent);
@@ -151,9 +115,6 @@ button {
   margin-right: 0.3em;
 }
 
-/* Shared "pill" link treatment — mono label, subtle bordered surface,
-   hover-to-accent. Used by the About CV download and the Contact
-   GitHub/LinkedIn links (previously two byte-identical copies). */
 .pill-link {
   display: inline-flex;
   align-items: center;
@@ -178,10 +139,6 @@ button {
   }
 }
 
-/* Scroll reveal — see `useReveal`. The hidden start state applies ONLY under
-   `html.reveal-ready`, a class the hook adds once JS runs; so no-JS / headless
-   renders show content normally and nothing ships blank. A revealed group's
-   direct children cascade in with a small stagger. */
 html.reveal-ready [data-reveal-group] > * {
   opacity: 0;
   transform: translateY(14px);
@@ -208,10 +165,6 @@ html.reveal-ready [data-reveal-group][data-revealed] > *:nth-child(n + 5) {
   transition-delay: 280ms;
 }
 
-/* The safety-timer path in `useReveal` (fired when the observer never gets a
-   chance to — hidden tab, no scroll) reveals instantly: a throttled/headless
-   render could otherwise be captured mid-fade, showing content stuck
-   half-visible. */
 html.reveal-ready [data-reveal-group][data-reveal-instant] > * {
   transition: none;
 }
@@ -224,8 +177,6 @@ html.reveal-ready [data-reveal-group][data-reveal-instant] > * {
     transition-duration: 0.01ms !important;
   }
 
-  /* belt-and-suspenders: the hook already no-ops under reduced motion, but if
-     `reveal-ready` is ever present, keep content fully visible regardless. */
   html.reveal-ready [data-reveal-group] > * {
     opacity: 1;
     transform: none;

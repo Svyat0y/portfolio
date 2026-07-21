@@ -1,18 +1,26 @@
 .overlay {
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  border: none;
+  color: inherit;
+
   position: fixed;
   inset: 0;
-  z-index: 200;
   display: flex;
   justify-content: flex-end;
   background: rgba(10, 10, 10, 0.7);
-  /* -webkit- first, standard last — see Header.module.scss for why the order
-     matters (Vite's prod build silently drops whichever comes first). */
   -webkit-backdrop-filter: blur(2px);
   backdrop-filter: blur(2px);
   animation: overlay-in 220ms ease both;
 
   &.closing {
     animation: overlay-out 220ms ease both;
+  }
+
+  &::backdrop {
+    background: transparent;
   }
 }
 
@@ -22,19 +30,9 @@
   height: 100dvh;
   overflow-y: auto;
   padding: calc(var(--header-height) + var(--space-3)) var(--gutter) var(--space-5);
-  /* This panel is a fixed, full-screen portal that covers the header entirely
-     (z-index 200 > header's 100), so it never needs the header-height top
-     clearance the in-flow sections do. On desktop that extra top space reads
-     as comfortable framing (kept), but on phones it left a big empty gap above
-     "← back to projects" — pin the content up, clearing only the notch. */
   @media (max-width: 768px) {
     padding-top: calc(var(--space-4) + env(safe-area-inset-top));
   }
-  /* Calm reading surface — a fully opaque solid base with one static lime
-     glow anchored top-right (echoes the landing constellation's glow corner,
-     without its particles/motion). Deliberately quieter than the lively
-     full-page background: this is a "read the details" moment, not a "wow"
-     one. No transparency into the page behind — nothing can bleed through. */
   background:
     radial-gradient(52rem 52rem at 94% -10%, rgba(var(--color-accent-rgb), 0.1), transparent 60%),
     var(--color-bg-raised);
@@ -46,8 +44,6 @@
   }
 }
 
-/* Full-bleed panel so future screenshots/images have room to breathe;
-   content itself still centers to a readable width. */
 .content {
   width: 100%;
   max-width: 72rem;
@@ -131,12 +127,6 @@
   color: var(--color-text-muted);
 }
 
-/* Mobile: a horizontal scroll-snap filmstrip — fixed, modest height so 3-4
-   screenshots never push the description far down the page (the thing that
-   goes wrong with a naive vertical stack of full-width images on a phone).
-   Peeking the next image's edge (item width < 100%) hints there's more to
-   swipe without needing dots/arrows. Desktop: switches to a plain grid, no
-   scroll container needed since there's room to lay them out side by side. */
 .screenshots {
   display: flex;
   gap: var(--space-2);

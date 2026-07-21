@@ -1,30 +1,24 @@
 import { useState, type FormEvent } from 'react';
+import { contactEmail, contactFormText } from '../../contact.content';
 import styles from './ContactForm.module.scss';
 
 type Status = 'idle' | 'submitting' | 'success' | 'error';
 
-/**
- * Submits to Netlify Forms via a plain fetch (no backend of our own).
- * Netlify's build bot detects the matching static form in index.html and
- * wires this one up automatically — see the comment there for details.
- */
 export function ContactForm() {
   const [status, setStatus] = useState<Status>('idle');
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const form = event.currentTarget;
-    const payload: Record<string, string> = {};
-    new FormData(form).forEach((value, key) => {
-      payload[key] = String(value);
-    });
+    const body = new URLSearchParams();
+    new FormData(form).forEach((value, key) => body.append(key, String(value)));
 
     setStatus('submitting');
     try {
       const response = await fetch('/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: new URLSearchParams(payload).toString(),
+        body: body.toString(),
       });
       if (!response.ok) throw new Error('Request failed');
       setStatus('success');
@@ -37,7 +31,7 @@ export function ContactForm() {
   if (status === 'success') {
     return (
       <p className={styles.success} role="status">
-        // message sent — thanks, I'll get back to you soon.
+        {contactFormText.success}
       </p>
     );
   }
@@ -74,12 +68,14 @@ export function ContactForm() {
       </label>
 
       <button type="submit" className={styles.submit} disabled={status === 'submitting'}>
-        {status === 'submitting' ? 'sending…' : 'send message →'}
+        {status === 'submitting' ? contactFormText.submitting : contactFormText.submit}
       </button>
 
       {status === 'error' && (
         <p className={styles.error} role="alert">
-          Something went wrong — try again, or email me directly.
+          {contactFormText.errorPrefix}
+          <a href={`mailto:${contactEmail}`}>{contactFormText.errorLink}</a>
+          {contactFormText.errorSuffix}
         </p>
       )}
     </form>
