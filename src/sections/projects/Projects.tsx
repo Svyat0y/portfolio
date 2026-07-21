@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation, Pagination, Autoplay, Keyboard } from 'swiper/modules';
+import { Navigation, Pagination, Keyboard } from 'swiper/modules';
 import type { Swiper as SwiperClass } from 'swiper/types';
 import 'swiper/css';
 import 'swiper/css/navigation';
@@ -11,25 +11,24 @@ import { ProjectCard } from './components/project-card';
 import { ProjectDetail } from './components/project-detail';
 import styles from './Projects.module.scss';
 
-const AUTOPLAY_DELAY = 6000;
 const PROJECT_PARAM = 'project';
 
 /**
- * Cards per carousel page, tiered to match `.grid`'s own column breakpoints
- * (Projects.module.scss): 2 columns above 900px (desktop, unchanged — 4 = a
- * clean 2×2 page), 1 column at or below that. A fixed 4-per-page on a single
- * mobile column stacked 4 cards tall on page 1 and stranded a lone 5th card
- * with a huge empty gap on page 2 (the section still enforces a full-viewport
- * min-height). Smaller pages on narrow viewports keep every page's stacked
- * height roughly even instead.
+ * Cards per carousel row/slide, tiered to match `.grid`'s own column
+ * breakpoints (Projects.module.scss): 4 columns above 1200px (desktop), 2
+ * between 769–1200px (tablet), 1 at or below 768px (mobile).
  */
 function getItemsPerSlide(): number {
   if (typeof window === 'undefined') return 4;
   if (window.matchMedia('(max-width: 768px)').matches) return 1;
-  if (window.matchMedia('(max-width: 900px)').matches) return 2;
+  if (window.matchMedia('(max-width: 1200px)').matches) return 2;
   return 4;
 }
 
+/** Fills each page to `size` cards, leaving only the trailing page short —
+ * e.g. 5 items at size 4 → [4, 1]; 15 items at size 4 → [4, 4, 4, 3]. Cards
+ * have a fixed height (ProjectCard.module.scss), so a short trailing page
+ * never affects row height/spacing regardless of its card count. */
 function chunk<T>(items: T[], size: number): T[][] {
   const chunks: T[][] = [];
   for (let i = 0; i < items.length; i += size) {
@@ -65,7 +64,7 @@ export function Projects() {
 
   useEffect(() => {
     const mobile = window.matchMedia('(max-width: 768px)');
-    const tablet = window.matchMedia('(max-width: 900px)');
+    const tablet = window.matchMedia('(max-width: 1200px)');
     const handleChange = () => setItemsPerSlide(getItemsPerSlide());
     mobile.addEventListener('change', handleChange);
     tablet.addEventListener('change', handleChange);
@@ -139,22 +138,24 @@ export function Projects() {
         <Swiper
           key={itemsPerSlide}
           className={styles.swiper}
-          autoHeight={true}
+          autoHeight={false}
           onSwiper={setSwiper}
-          modules={[Navigation, Pagination, Autoplay, Keyboard]}
+          modules={[Navigation, Pagination, Keyboard]}
           navigation={hasMultiplePages ? { prevEl, nextEl } : false}
           pagination={hasMultiplePages ? { el: paginationEl, clickable: true } : false}
           keyboard={{ enabled: true }}
           loop={hasMultiplePages}
-          autoplay={
-            hasMultiplePages
-              ? { delay: AUTOPLAY_DELAY, disableOnInteraction: false, pauseOnMouseEnter: true }
-              : false
-          }
         >
           {pages.map((pageProjects, index) => (
             <SwiperSlide key={index}>
-              <ul className={styles.grid}>
+              <ul
+                className={styles.grid}
+                style={
+                  itemsPerSlide < 4
+                    ? { gridTemplateColumns: `repeat(${pageProjects.length}, minmax(0, 1fr))` }
+                    : undefined
+                }
+              >
                 {pageProjects.map((project) => (
                   <li key={project.title}>
                     <ProjectCard project={project} onSelect={() => selectProject(project)} />

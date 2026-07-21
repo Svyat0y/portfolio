@@ -1,6 +1,6 @@
 .carousel {
   margin-top: var(--space-3);
-  max-width: calc(44rem * 2 + var(--space-4));
+  max-width: var(--content-max-width);
 
   /* shared by the swiper's slides and the pagination dots below it */
   --swiper-pagination-color: var(--color-accent);
@@ -14,18 +14,28 @@
   padding-bottom: var(--space-2);
 }
 
+/* One row per slide, up to 4/2/1 cards depending on viewport (tiers match
+   `getItemsPerSlide` in Projects.tsx). Desktop keeps a fixed 4-column grid —
+   a trailing slide with fewer than 4 cards just leaves empty column(s) at the
+   end of the row rather than stretching card width. Tablet/mobile instead get
+   `grid-template-columns` set inline per slide (Projects.tsx, only when
+   `itemsPerSlide < 4`) to the slide's actual card count, so a lone trailing
+   card fills the row instead of sitting at half/full width oddly — there's
+   more value in a full-width single card on a narrow screen than in matching
+   desktop's "leave a gap" behavior. `grid-auto-rows: 1fr` + `align-items:
+   stretch` on the card itself makes every card in a row match the tallest
+   one's height, so the row (and therefore the whole slide/carousel) has one
+   stable height per breakpoint instead of jumping with description length. */
 .grid {
+  padding: 10px 0;
   list-style: none;
   min-width: 0;
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  column-gap: var(--space-4);
-  row-gap: var(--space-1);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-auto-rows: 1fr;
+  column-gap: var(--space-3);
+  row-gap: var(--space-3);
   align-items: stretch;
-
-  @media (max-width: 900px) {
-    grid-template-columns: 1fr;
-  }
 }
 
 .controls {
