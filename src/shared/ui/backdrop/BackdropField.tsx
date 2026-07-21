@@ -41,25 +41,45 @@ export function BackdropField() {
       FALLBACK_ACCENT_RGB;
     let width = 0;
     let height = 0;
-    let particles: Particle[] = [];
+    const particles: Particle[] = [];
     // render positions (post-displacement), reused for the link pass
     let rx: number[] = [];
     let ry: number[] = [];
     const pointer = { x: -9999, y: -9999, active: false };
 
-    const seed = () => {
-      const count = Math.min(MAX_PARTICLES, Math.round((width * height) / DENSITY));
-      particles = Array.from({ length: count }, () => ({
-        x: Math.random() * width,
-        y: Math.random() * height,
-        vx: (Math.random() - 0.5) * 0.32,
-        vy: (Math.random() - 0.5) * 0.32,
-      }));
-      rx = new Array(count).fill(0);
-      ry = new Array(count).fill(0);
+    const makeParticle = (): Particle => ({
+      x: Math.random() * width,
+      y: Math.random() * height,
+      vx: (Math.random() - 0.5) * 0.32,
+      vy: (Math.random() - 0.5) * 0.32,
+    });
+
+    const targetCount = () => Math.min(MAX_PARTICLES, Math.round((width * height) / DENSITY));
+
+    // Fit the field to the current dimensions WITHOUT reshuffling: rescale each
+    // particle's position proportionally (the constellation smoothly squeezes/
+    // stretches instead of jumping to fresh random spots on every resize event),
+    // then top up or trim the count to match the new area. `prevW/prevH === 0`
+    // is the first call (empty field) — nothing to rescale, just seed to count.
+    const fit = (prevW: number, prevH: number) => {
+      if (prevW > 0 && prevH > 0 && (prevW !== width || prevH !== height)) {
+        const sx = width / prevW;
+        const sy = height / prevH;
+        for (const p of particles) {
+          p.x *= sx;
+          p.y *= sy;
+        }
+      }
+      const count = targetCount();
+      while (particles.length < count) particles.push(makeParticle());
+      if (particles.length > count) particles.length = count;
+      rx = new Array(particles.length).fill(0);
+      ry = new Array(particles.length).fill(0);
     };
 
     const resize = () => {
+      const prevW = width;
+      const prevH = height;
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
       width = window.innerWidth;
       height = window.innerHeight;
@@ -68,7 +88,7 @@ export function BackdropField() {
       canvas.style.width = `${width}px`;
       canvas.style.height = `${height}px`;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      seed();
+      fit(prevW, prevH);
     };
 
     const draw = () => {

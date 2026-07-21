@@ -45,10 +45,12 @@
 }
 
 /* Header stacks into two centered rows below 769px (see Header.module.scss):
-   logo row (44px) + nav row (44px) + padding. Needs more clearance so section
-   content doesn't sit under it. */
+   logo row (44px) + single nav row (44px) + gap + padding ≈ 114px. The token
+   is used for section top-padding, so it must stay ≥ the header's real height
+   or the fixed header overlaps section titles. 7.25rem (116px) leaves a hair
+   of margin over the measured ~114px. */
 @media (max-width: 768px) {
   :root {
-    --header-height: 7.5rem;
+    --header-height: 7.25rem;
   }
 }

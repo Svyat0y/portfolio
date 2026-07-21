@@ -22,6 +22,14 @@
   height: 100dvh;
   overflow-y: auto;
   padding: calc(var(--header-height) + var(--space-3)) var(--gutter) var(--space-5);
+  /* This panel is a fixed, full-screen portal that covers the header entirely
+     (z-index 200 > header's 100), so it never needs the header-height top
+     clearance the in-flow sections do. On desktop that extra top space reads
+     as comfortable framing (kept), but on phones it left a big empty gap above
+     "← back to projects" — pin the content up, clearing only the notch. */
+  @media (max-width: 768px) {
+    padding-top: calc(var(--space-4) + env(safe-area-inset-top));
+  }
   /* Calm reading surface — a fully opaque solid base with one static lime
      glow anchored top-right (echoes the landing constellation's glow corner,
      without its particles/motion). Deliberately quieter than the lively
