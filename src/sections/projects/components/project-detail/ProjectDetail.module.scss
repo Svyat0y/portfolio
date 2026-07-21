@@ -5,8 +5,10 @@
   display: flex;
   justify-content: flex-end;
   background: rgba(10, 10, 10, 0.7);
-  backdrop-filter: blur(2px);
+  /* -webkit- first, standard last — see Header.module.scss for why the order
+     matters (Vite's prod build silently drops whichever comes first). */
   -webkit-backdrop-filter: blur(2px);
+  backdrop-filter: blur(2px);
   animation: overlay-in 220ms ease both;
 
   &.closing {
