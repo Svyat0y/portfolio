@@ -58,7 +58,7 @@ export const projects: Project[] = [
     summary: 'Gaming & tournament platform with real-time UI and account systems.',
     description:
       'Contributed complex UI features to a gaming and tournament platform - interactive tables, modals, and user account systems. Maintained end-to-end tests with Puppeteer to cut regression bugs, and worked with GraphQL and REST APIs to keep data flowing cleanly between services.',
-    stack: ['React', 'Next.js', 'TypeScript', 'GraphQL', 'REST APIs', 'Puppeteer'],
+    stack: ['React', 'Next.js', 'TypeScript', 'GraphQL','Puppeteer'],
     // period: '2023 – 2025',
     url: 'https://www.duelmasters.io/',
   },
