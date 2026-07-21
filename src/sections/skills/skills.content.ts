@@ -36,4 +36,8 @@ export const skillGroups: SkillGroup[] = [
     label: 'CMS',
     items: ['Strapi', 'WordPress'],
   },
+  {
+    label: 'languages',
+    items: ['Russian/Ukrainian - native', 'English - B1', 'Spanish - A1'],
+  },
 ];
