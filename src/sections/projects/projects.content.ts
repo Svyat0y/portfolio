@@ -12,8 +12,11 @@ export interface Project {
   period?: string;
   /** standout stat shown as a badge, e.g. "3.5M+ users" */
   highlight?: string;
-  /** absent → private/client work, rendered without a link */
+  /** absent → private/client work, rendered without a link. Presence/absence
+   * also drives the automatic "public"/"private" card badge. */
   url?: string;
+  /** extra badges shown next to the public/private one, e.g. ["pet project"] */
+  tags?: string[];
   /** path under /public, absent → placeholder block */
   screenshot?: string;
 }

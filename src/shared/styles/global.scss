@@ -92,11 +92,15 @@ button {
    edge to a scroll stop, it never constrains height or adds overflow. Content
    shorter than the viewport is centered, giving every section a deliberate
    full-screen presence and even pacing.
-   `min-height: 100svh` is desktop-only (see the media query below) — slide
-   navigation itself is also fine-pointer-only (see the `pointer: coarse`
-   query above), so forcing every mobile section to a full screen just
-   stretched the gap between short sections for no matching interaction.
-   Mobile sections size to their own content instead.
+   `min-height: 100svh` is gated to the SAME condition that turns on slide
+   navigation — a wide viewport AND a fine pointer (mouse/trackpad) — so
+   full-screen sections appear exactly when, and only when, slides do. Gating
+   it on width alone would give a landscape tablet (coarse pointer, but wide)
+   full-height sections without any slide-snapping (snap is disabled on
+   `pointer: coarse`, see the query near the top), i.e. big empty gaps between
+   short sections with no interaction to justify them. Every touch device
+   (phones and tablets, both orientations) instead sizes sections to their own
+   content.
    The bottom padding adds `env(safe-area-inset-bottom)` so content never
    sits under the iOS home-indicator bar (needs `viewport-fit=cover` in
    index.html's viewport meta tag to be non-zero at all). */
@@ -111,7 +115,7 @@ button {
   scroll-snap-stop: always;
 }
 
-@media (min-width: 901px) {
+@media (min-width: 901px) and (pointer: fine) {
   .section {
     min-height: 100svh;
   }
