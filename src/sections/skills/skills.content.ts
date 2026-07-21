@@ -1,11 +1,9 @@
-/**
- * Skills grouped by domain. Grouping (over a flat list) gives the section
- * real structure and reads as intentional rather than a chip dump.
- */
 export interface SkillGroup {
   label: string;
   items: string[];
 }
+
+export const skillsLead = 'The stack I reach for — from the interface down to the infrastructure.';
 
 export const skillGroups: SkillGroup[] = [
   {

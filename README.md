@@ -1,50 +1,43 @@
-# React + TypeScript + Vite
+# Portfolio
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Single-page portfolio for Alexander Pop — a React 19 + Vite 8 + TypeScript site
+with a canvas constellation backdrop, matrix-style text-scramble effects, and a
+Netlify-backed contact form.
 
-Currently, two official plugins are available:
+## Requirements
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Node ≥ 24** (see `.nvmrc`). If your shell defaults to an older Node, run
+  `nvm use` in the project root first — the build fails on older versions.
 
-## Expanding the ESLint configuration
+## Getting started
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-});
+```bash
+nvm use          # switch to Node 24
+npm install
+npm run dev      # start the Vite dev server
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+## Scripts
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react';
+| Script                 | What it does                             |
+| ---------------------- | ---------------------------------------- |
+| `npm run dev`          | Vite dev server with HMR                 |
+| `npm run build`        | Type-check (`tsc -b`) + production build |
+| `npm run typecheck`    | Type-check only                          |
+| `npm run lint`         | ESLint                                   |
+| `npm run preview`      | Preview the production build             |
+| `npm run format`       | Prettier write                           |
+| `npm run format:check` | Prettier check                           |
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-});
-```
+## Project structure
+
+Feature-Sliced-inspired `shared/` + `sections/` layout. See
+[`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for the full conventions and the
+load-bearing gotchas, [`docs/DESIGN.md`](docs/DESIGN.md) for the visual spec,
+and [`docs/CONTEXT.md`](docs/CONTEXT.md) for current state and deferred work.
+_(The `docs/` folder is gitignored — local working notes.)_
+
+## Deployment
+
+Hosted on Netlify. The contact form posts to Netlify Forms via a hidden static
+form in `index.html` (see the gotchas in `docs/ARCHITECTURE.md`).

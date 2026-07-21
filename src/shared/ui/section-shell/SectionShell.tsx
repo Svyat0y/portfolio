@@ -7,21 +7,9 @@ import styles from './SectionShell.module.scss';
 interface SectionShellProps {
   id: SectionId;
   title: string;
-  /** right-hand column: a visual, interactive element, or form. Omit for a
-   * single-column section. Present → two-column layout on wide screens. */
   aside?: ReactNode;
 }
 
-/**
- * Full-screen section shell with a "// TITLE" heading, centered in a shared
- * max-width container so content stays balanced instead of hugging the left
- * gutter. Optionally lays out a right-hand `aside` column.
- *
- * The title re-scrambles every time the section becomes the active slide
- * (see `useSlideActive`) — keying `ScrambleText` on `activations` remounts
- * it, replaying its own `playOnMount` effect (the same remount-for-replay
- * trick already used for the Projects list↔detail `dive` transition).
- */
 export function SectionShell({ id, title, aside, children }: PropsWithChildren<SectionShellProps>) {
   const mainRef = useReveal<HTMLDivElement>();
   const asideRef = useReveal<HTMLDivElement>();

@@ -4,4 +4,9 @@ export const aboutContent = {
     'Worked on a high-load gaming platform and a Telegram Mini App with over 3.5 million users, alongside full-stack projects built from scratch.',
     'Focused on modern development practices, including automated testing and code quality tools, and based in Valencia, Spain.',
   ],
+  resume: {
+    previewSrc: '/resume-preview.jpg',
+    downloadHref: '/resume.pdf',
+    downloadLabel: 'download CV ↓',
+  },
 } as const;

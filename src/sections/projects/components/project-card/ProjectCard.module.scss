@@ -1,14 +1,3 @@
-/* Fixed-height card built from vertically-pinned zones, so every card — no
-   matter how much text it holds or how many share a slide — reads as one
-   synchronized row:
-     • .name   — reserves 2 title lines (pinned top), so 1- and 2-line titles
-                 share the same band and every title's baseline lines up.
-     • .meta   — optional highlight/badge row, only rendered when present.
-     • .summary — flex-fills the middle (the most space), clamped with an
-                 ellipsis so long copy never grows the card.
-     • .stack  — pinned to the bottom, reserving 2 lines, so the divider above
-                 it sits at an identical height on every card.
-   Overflowing text in any zone is clamped rather than allowed to grow. */
 .card {
   width: 100%;
   height: 21rem;
@@ -25,9 +14,6 @@
     box-shadow 0.25s cubic-bezier(0.22, 1, 0.36, 1),
     border-color var(--transition-fast);
 
-  /* Lifts the whole card toward the viewer on interaction. Shadow recipe
-     matches the résumé frame elsewhere on the site (About section) — same
-     soft-lift language, not a one-off. */
   &:hover,
   &:focus-visible {
     transform: translateY(-6px);
@@ -40,7 +26,7 @@
   font-size: 1.25rem;
   font-weight: 500;
   line-height: 1.3;
-  min-height: 2.6em; /* reserve 2 lines so short titles keep the band height */
+  min-height: 2.6em;
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
@@ -54,10 +40,6 @@
   }
 }
 
-/* Always rendered (even with no badges) and given a reserved height, so the
-   summary below it starts at the same Y on every card — cards without a
-   highlight/private badge keep the row as breathing space rather than pulling
-   their summary up out of alignment. */
 .meta {
   display: flex;
   align-items: center;
@@ -106,9 +88,6 @@
   font-family: var(--font-mono);
   font-size: var(--text-small);
   line-height: 1.4;
-  /* reserve 2 text lines + this element's own padding-top + border (box-sizing
-     is border-box) so the divider sits at an identical height on every card,
-     whether the stack is one line or two */
   min-height: 3.4rem;
   color: var(--color-text-muted);
   display: -webkit-box;

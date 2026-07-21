@@ -1,8 +1,11 @@
+import { identity } from '@/shared/config';
 import { SectionShell } from '@/shared/ui/section-shell';
 import { aboutContent } from './about.content';
 import styles from './About.module.scss';
 
 export function About() {
+  const { resume } = aboutContent;
+
   return (
     <SectionShell
       id="about"
@@ -11,13 +14,13 @@ export function About() {
         <div className={styles.resume}>
           <div className={styles.resumeFrame}>
             <img
-              src="/resume-preview.jpg"
-              alt="Alexander Pop's résumé"
+              src={resume.previewSrc}
+              alt={`${identity.name}'s résumé`}
               className={styles.resumeImg}
             />
           </div>
-          <a className="pill-link" href="/resume.pdf" download>
-            download CV ↓
+          <a className="pill-link" href={resume.downloadHref} download>
+            {resume.downloadLabel}
           </a>
         </div>
       }

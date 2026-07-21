@@ -1,9 +1,8 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation, Pagination, Keyboard, Autoplay } from 'swiper/modules';
+import { Navigation, Pagination, Keyboard } from 'swiper/modules';
 import type { Swiper as SwiperClass } from 'swiper/types';
 import 'swiper/css';
-import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import { SectionShell } from '@/shared/ui/section-shell';
 import { projects, type Project } from './projects.content';
@@ -13,22 +12,12 @@ import styles from './Projects.module.scss';
 
 const PROJECT_PARAM = 'project';
 
-/**
- * Cards per carousel row/slide, tiered to match `.grid`'s own column
- * breakpoints (Projects.module.scss): 4 columns above 1200px (desktop), 2
- * between 769–1200px (tablet), 1 at or below 768px (mobile).
- */
 function getItemsPerSlide(): number {
-  if (typeof window === 'undefined') return 4;
   if (window.matchMedia('(max-width: 768px)').matches) return 1;
   if (window.matchMedia('(max-width: 1200px)').matches) return 2;
   return 4;
 }
 
-/** Fills each page to `size` cards, leaving only the trailing page short —
- * e.g. 5 items at size 4 → [4, 1]; 15 items at size 4 → [4, 4, 4, 3]. Cards
- * have a fixed height (ProjectCard.module.scss), so a short trailing page
- * never affects row height/spacing regardless of its card count. */
 function chunk<T>(items: T[], size: number): T[][] {
   const chunks: T[][] = [];
   for (let i = 0; i < items.length; i += size) {
@@ -121,7 +110,7 @@ export function Projects() {
           key={itemsPerSlide}
           className={styles.swiper}
           onSwiper={setSwiper}
-          modules={[Navigation, Pagination, Autoplay, Keyboard]}
+          modules={[Navigation, Pagination, Keyboard]}
           navigation={hasMultiplePages ? { prevEl, nextEl } : false}
           pagination={hasMultiplePages ? { el: paginationEl, clickable: true } : false}
           keyboard={{ enabled: true }}

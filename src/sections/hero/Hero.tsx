@@ -1,6 +1,7 @@
 import { identity } from '@/shared/config';
 import { useSlideActive } from '@/shared/lib/hooks';
 import { ScrambleText } from '@/shared/ui/scramble-text';
+import { heroContent } from './hero.content';
 import styles from './Hero.module.scss';
 
 export function Hero() {
@@ -12,7 +13,7 @@ export function Hero() {
         <p className={styles.intro}>
           <ScrambleText
             key={`intro-${activations}`}
-            text="// portfolio"
+            text={heroContent.intro}
             playOnMount
             duration={900}
           />
