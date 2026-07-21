@@ -22,12 +22,7 @@ interface SectionShellProps {
  * it, replaying its own `playOnMount` effect (the same remount-for-replay
  * trick already used for the Projects list↔detail `dive` transition).
  */
-export function SectionShell({
-  id,
-  title,
-  aside,
-  children,
-}: PropsWithChildren<SectionShellProps>) {
+export function SectionShell({ id, title, aside, children }: PropsWithChildren<SectionShellProps>) {
   const mainRef = useReveal<HTMLDivElement>();
   const asideRef = useReveal<HTMLDivElement>();
   const { ref: sectionRef, activations } = useSlideActive<HTMLElement>();

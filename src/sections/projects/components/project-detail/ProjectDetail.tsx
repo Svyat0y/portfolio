@@ -53,11 +53,17 @@ export function ProjectDetail({ project, closing, onBack, onExited }: ProjectDet
     const previouslyFocused = document.activeElement as HTMLElement | null;
 
     root?.setAttribute('inert', '');
-    panelRef.current?.querySelector<HTMLElement>(FOCUSABLE_SELECTOR)?.focus();
+    const target = panelRef.current?.querySelector<HTMLElement>(FOCUSABLE_SELECTOR);
+    target?.style.setProperty('outline', 'none');
+    target?.focus({ preventScroll: true });
+    const restoreRing = () => target?.style.removeProperty('outline');
+    target?.addEventListener('keydown', restoreRing, { once: true });
+    target?.addEventListener('blur', restoreRing, { once: true });
 
     return () => {
       root?.removeAttribute('inert');
       previouslyFocused?.focus();
+      restoreRing();
     };
   }, []);
 
@@ -122,6 +128,22 @@ export function ProjectDetail({ project, closing, onBack, onExited }: ProjectDet
           </div>
 
           {project.period && <p className={styles.period}>{project.period}</p>}
+
+          {project.screenshots && project.screenshots.length > 0 && (
+            <ul className={styles.screenshots}>
+              {project.screenshots.map((src, index) => (
+                <li key={src} className={styles.screenshot}>
+                  <a href={src} target="_blank" rel="noreferrer">
+                    <img
+                      src={src}
+                      alt={`${project.title} screenshot ${index + 1}`}
+                      loading="lazy"
+                    />
+                  </a>
+                </li>
+              ))}
+            </ul>
+          )}
 
           <p className={styles.description}>{project.description}</p>
 
