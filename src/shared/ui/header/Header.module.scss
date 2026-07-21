@@ -6,8 +6,8 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
-  padding: 0.75rem var(--gutter);
+  gap: 0.35rem;
+  padding: 0.625rem var(--gutter);
   background: linear-gradient(to bottom, rgba(10, 10, 10, 0.85), rgba(10, 10, 10, 0));
   /* -webkit- prefix MUST come before the standard property: Vite's prod build
      (Lightning CSS) collapses this vendor/standard pair down to a single
@@ -43,12 +43,15 @@
 
 .nav {
   display: flex;
-  flex-wrap: wrap;
+  /* Single row on phones too: wrapping to a second line pushed the real header
+     height (~176px) far past the --header-height token (used for section
+     top-padding), so the fixed header overlapped section titles. One row keeps
+     the real height in sync with the token. */
+  flex-wrap: nowrap;
   justify-content: center;
-  gap: 0.75rem 1.25rem;
+  gap: 0 0.55rem;
 
   @media (min-width: 769px) {
-    flex-wrap: nowrap;
     gap: clamp(1rem, 3vw, 2.5rem);
   }
 }
@@ -58,15 +61,22 @@
   align-items: center;
   /* 44px minimum touch target (WCAG 2.5.5) */
   min-height: 44px;
-  padding-inline: 0.25rem;
+  padding-inline: 0.15rem;
   font-family: var(--font-mono);
   font-size: var(--text-small);
-  letter-spacing: 0.12em;
+  /* tighter tracking on phones so all four links fit one row; roomier on
+     desktop where there's space. */
+  letter-spacing: 0.05em;
   text-transform: lowercase;
   color: var(--color-text-muted);
   transition: color var(--transition-fast);
   /* reserve width so scramble squares don't shift layout */
   font-variant-numeric: tabular-nums;
+
+  @media (min-width: 769px) {
+    padding-inline: 0.25rem;
+    letter-spacing: 0.12em;
+  }
 
   &:hover {
     color: var(--color-text);
