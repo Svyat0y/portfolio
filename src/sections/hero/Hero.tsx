@@ -10,13 +10,28 @@ export function Hero() {
     <section id="hero" className={`section ${styles.hero}`} ref={ref}>
       <div className="section-inner">
         <p className={styles.intro}>
-          <ScrambleText key={`intro-${activations}`} text="// portfolio" playOnMount duration={900} />
+          <ScrambleText
+            key={`intro-${activations}`}
+            text="// portfolio"
+            playOnMount
+            duration={900}
+          />
         </p>
         <h1 className={styles.name}>
-          <ScrambleText key={`name-${activations}`} text={identity.name} playOnMount duration={1400} />
+          <ScrambleText
+            key={`name-${activations}`}
+            text={identity.name}
+            playOnMount
+            duration={1400}
+          />
         </h1>
         <p className={styles.role}>
-          <ScrambleText key={`role-${activations}`} text={identity.role} playOnMount duration={1100} />
+          <ScrambleText
+            key={`role-${activations}`}
+            text={identity.role}
+            playOnMount
+            duration={1100}
+          />
         </p>
         <p className={styles.tagline}>{identity.tagline}</p>
       </div>

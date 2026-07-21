@@ -17,8 +17,9 @@ export interface Project {
   url?: string;
   /** extra badges shown next to the public/private one, e.g. ["pet project"] */
   tags?: string[];
-  /** path under /public, absent → placeholder block */
-  screenshot?: string;
+  /** paths under /public, shown in the detail view between title and
+   * description. Absent/empty → no screenshots block rendered. */
+  screenshots?: string[];
 }
 
 /**
@@ -26,6 +27,32 @@ export interface Project {
  * add `url`/`screenshot` here once available.
  */
 export const projects: Project[] = [
+  {
+    title: 'Company Website & CMS',
+    summary: 'Company site built solo, frontend to a customized Strapi CMS.',
+    description:
+      'Single-handedly developed a company website from the ground up, owning the entire frontend and backend CMS integration. Extensively customized Strapi to fit the project’s content structure, then delivered and launched the production-ready site.',
+    stack: ['React', 'Next.js', 'Strapi'],
+    // period: '2023 – 2025',
+    url: 'https://www.smart-ui.pro/',
+    screenshots: [
+      '/screenshots/company-website/1.png',
+      '/screenshots/company-website/2.png',
+      '/screenshots/company-website/3.png',
+    ],
+  },
+  {
+    title: 'Form Builder',
+    summary: 'Build, publish, and analyze custom forms with real-time response charts.',
+    description:
+      'Form Builder is a pet project built to provide a complete form-creation platform. The core idea is to allow any registered user to design custom surveys and forms with flexible field types, publish them, and share a public link across various resources to gather the information they need. ' +
+      'Once responses start coming in, the system offers built-in analytics - including visual charts and graphs for multiple-choice questions, making it easy to interpret the collected data at a glance. ' +
+      'The project is currently at a stable MVP stage with all core features fully functional, and the architecture is designed with future extensibility in mind - ready for additional field types, advanced logic, integrations, and more.',
+    stack: ['React', 'NestJS', 'TypeScript'],
+    // period: '2023 – 2025',
+    url: 'https://awesome-form-builder.netlify.app/',
+    tags: ['pet project'],
+  },
   {
     title: 'Duelmasters',
     summary: 'Gaming & tournament platform with real-time UI and account systems.',
@@ -45,23 +72,6 @@ export const projects: Project[] = [
     // period: '2023 – 2025',
   },
   {
-    title: 'Guided Photo Collection App',
-    summary: 'Full-stack app for capturing photo sequences, built from scratch.',
-    description:
-      'Built a full-stack application for a guided selfie collection process, enabling users to capture photos in a specific sequence. Implemented both the front-end guide interface and the back-end API for photo upload, storage, and secure FTP access for the client.',
-    stack: ['React', 'Node.js'],
-    // period: '2023 – 2025',
-  },
-  {
-    title: 'Company Website & CMS',
-    summary: 'Company site built solo, frontend to a customized Strapi CMS.',
-    description:
-      'Single-handedly developed a company website from the ground up, owning the entire frontend and backend CMS integration. Extensively customized Strapi to fit the project’s content structure, then delivered and launched the production-ready site.',
-    stack: ['React', 'Next.js', 'Strapi'],
-    // period: '2023 – 2025',
-    url: 'https://www.smart-ui.pro/',
-  },
-  {
     title: 'Currency converter',
     summary: 'Demo version of the currency exchanger.',
     description:
@@ -69,5 +79,13 @@ export const projects: Project[] = [
     stack: ['React', 'Next.js'],
     // period: '2023 – 2025',
     url: 'https://minicurrencychanger.netlify.app/',
+  },
+  {
+    title: 'Guided Photo Collection App',
+    summary: 'Full-stack app for capturing photo sequences, built from scratch.',
+    description:
+      'Built a full-stack application for a guided selfie collection process, enabling users to capture photos in a specific sequence. Implemented both the front-end guide interface and the back-end API for photo upload, storage, and secure FTP access for the client.',
+    stack: ['React', 'Node.js'],
+    // period: '2023 – 2025',
   },
 ];

@@ -33,11 +33,26 @@ export function useReveal<T extends HTMLElement>() {
       el.dataset.revealed = 'true';
     };
 
+    // Elements already on-screen at mount (Hero on first load; any section a
+    // reload happens to land on, since the browser restores scroll position
+    // before this effect runs) get their IntersectionObserver "intersecting"
+    // callback almost in the same frame as the hidden state was applied
+    // above — the browser then coalesces both style changes into a single
+    // paint and the CSS transition never gets a "before" frame to animate
+    // from. A double rAF forces at least one committed paint of the hidden
+    // state first, so the transition always has something to animate from.
+    let rafId: number | undefined;
+    const revealNextFrame = () => {
+      rafId = requestAnimationFrame(() => {
+        rafId = requestAnimationFrame(() => reveal());
+      });
+    };
+
     const observer = new IntersectionObserver(
       (entries, obs) => {
         for (const entry of entries) {
           if (entry.isIntersecting) {
-            reveal();
+            revealNextFrame();
             obs.disconnect();
           }
         }
@@ -46,13 +61,27 @@ export function useReveal<T extends HTMLElement>() {
     );
     observer.observe(el);
 
-    // Safety net: if the observer never fires (hidden tab, no scroll), don't
-    // leave the content stuck in its hidden start state.
-    const timer = window.setTimeout(() => reveal(true), 1800);
+    // Safety net for a genuinely stuck case: the tab was backgrounded at
+    // mount (or becomes backgrounded before the user ever scrolls here), so
+    // rAF/IntersectionObserver callbacks are throttled and may never fire.
+    // Only arm it while the document is actually hidden — a normal visible
+    // tab relies on the IntersectionObserver alone, so content stays hidden
+    // until the user genuinely scrolls the section into view.
+    let timer: number | undefined;
+
+    const armIfHidden = () => {
+      if (document.hidden && timer === undefined) {
+        timer = window.setTimeout(() => reveal(true), 1800);
+      }
+    };
+    armIfHidden();
+    document.addEventListener('visibilitychange', armIfHidden);
 
     return () => {
       observer.disconnect();
-      window.clearTimeout(timer);
+      document.removeEventListener('visibilitychange', armIfHidden);
+      if (timer !== undefined) window.clearTimeout(timer);
+      if (rafId !== undefined) cancelAnimationFrame(rafId);
     };
   }, []);
 
