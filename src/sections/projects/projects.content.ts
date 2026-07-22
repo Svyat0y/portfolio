@@ -13,7 +13,7 @@ export interface Project {
 export const projectDetailText = {
   back: '← back to projects',
   visit: 'Visit site ↗',
-  noLink: 'Private / client project — no public link.',
+  noLink: 'Private / client project - no public link.',
 } as const;
 
 export const projects: Project[] = [

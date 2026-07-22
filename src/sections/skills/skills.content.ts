@@ -3,7 +3,7 @@ export interface SkillGroup {
   items: string[];
 }
 
-export const skillsLead = 'The stack I reach for — from the interface down to the infrastructure.';
+export const skillsLead = 'The stack I reach for - from the interface down to the infrastructure.';
 
 export const skillGroups: SkillGroup[] = [
   {

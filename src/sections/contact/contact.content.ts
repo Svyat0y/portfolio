@@ -4,10 +4,10 @@ export const contactIntro =
 export const contactEmail = 'alexander.pop86@gmail.com';
 
 export const contactFormText = {
-  success: "// message sent — thanks, I'll get back to you soon.",
+  success: "// message sent - thanks, I'll get back to you soon.",
   submit: 'send message →',
   submitting: 'sending…',
-  errorPrefix: 'Something went wrong — try again, or ',
+  errorPrefix: 'Something went wrong - try again, or ',
   errorLink: 'email me directly',
   errorSuffix: '.',
 } as const;
