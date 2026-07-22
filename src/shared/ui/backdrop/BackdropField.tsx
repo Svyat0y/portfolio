@@ -178,14 +178,25 @@ export function BackdropField() {
     const onLeave = () => {
       pointer.active = false;
     };
+    const onTouch = (e: TouchEvent) => {
+      const touch = e.touches[0];
+      if (!touch) return;
+      pointer.x = touch.clientX;
+      pointer.y = touch.clientY;
+      pointer.active = true;
+    };
+    const onTouchEnd = () => {
+      pointer.active = false;
+    };
 
     resize();
     window.addEventListener('resize', resize);
-    const finePointer = window.matchMedia('(pointer: fine)').matches;
-    if (finePointer) {
-      window.addEventListener('pointermove', onPointer, { passive: true });
-      document.documentElement.addEventListener('pointerleave', onLeave);
-    }
+    window.addEventListener('pointermove', onPointer, { passive: true });
+    document.documentElement.addEventListener('pointerleave', onLeave);
+    window.addEventListener('touchstart', onTouch, { passive: true });
+    window.addEventListener('touchmove', onTouch, { passive: true });
+    window.addEventListener('touchend', onTouchEnd, { passive: true });
+    window.addEventListener('touchcancel', onTouchEnd, { passive: true });
 
     if (reduce) draw();
     else loop();
@@ -195,6 +206,10 @@ export function BackdropField() {
       window.removeEventListener('resize', resize);
       window.removeEventListener('pointermove', onPointer);
       document.documentElement.removeEventListener('pointerleave', onLeave);
+      window.removeEventListener('touchstart', onTouch);
+      window.removeEventListener('touchmove', onTouch);
+      window.removeEventListener('touchend', onTouchEnd);
+      window.removeEventListener('touchcancel', onTouchEnd);
     };
   }, []);
 
