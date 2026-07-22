@@ -23,7 +23,7 @@ dist-ssr
 *.sln
 *.sw?
 
-# Informational / working notes — not for the repo
+# Informational / working notes - not for the repo
 .claude/
 docs/
 

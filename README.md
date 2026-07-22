@@ -1,13 +1,13 @@
 # Portfolio
 
-Single-page portfolio for Alexander Pop — a React 19 + Vite 8 + TypeScript site
+Single-page portfolio for Alexander Pop - a React 19 + Vite 8 + TypeScript site
 with a canvas constellation backdrop, matrix-style text-scramble effects, and a
 Netlify-backed contact form.
 
 ## Requirements
 
 - **Node ≥ 24** (see `.nvmrc`). If your shell defaults to an older Node, run
-  `nvm use` in the project root first — the build fails on older versions.
+  `nvm use` in the project root first - the build fails on older versions.
 
 ## Getting started
 
@@ -35,7 +35,7 @@ Feature-Sliced-inspired `shared/` + `sections/` layout. See
 [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for the full conventions and the
 load-bearing gotchas, [`docs/DESIGN.md`](docs/DESIGN.md) for the visual spec,
 and [`docs/CONTEXT.md`](docs/CONTEXT.md) for current state and deferred work.
-_(The `docs/` folder is gitignored — local working notes.)_
+_(The `docs/` folder is gitignored - local working notes.)_
 
 ## Deployment
 
