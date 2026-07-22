@@ -35,6 +35,8 @@ export function BackdropField() {
     let rx: number[] = [];
     let ry: number[] = [];
     const pointer = { x: -9999, y: -9999, active: false };
+    let scrolling = false;
+    let scrollEndTimer = 0;
 
     const makeParticle = (): Particle => ({
       x: Math.random() * width,
@@ -79,11 +81,13 @@ export function BackdropField() {
     };
 
     const draw = () => {
-      if (window.innerWidth !== width || window.innerHeight !== height) resize();
+      if (!scrolling && (window.innerWidth !== width || window.innerHeight !== height)) resize();
+
+      const active = pointer.active && !scrolling;
 
       ctx.clearRect(0, 0, width, height);
 
-      if (pointer.active) {
+      if (active) {
         const halo = ctx.createRadialGradient(
           pointer.x,
           pointer.y,
@@ -111,7 +115,7 @@ export function BackdropField() {
         let y = p.y;
         let lit = false;
 
-        if (pointer.active) {
+        if (active) {
           const dx = p.x - pointer.x;
           const dy = p.y - pointer.y;
           const dSq = dx * dx + dy * dy;
@@ -139,7 +143,7 @@ export function BackdropField() {
         ctx.fill();
       }
 
-      if (pointer.active) {
+      if (active) {
         ctx.beginPath();
         ctx.arc(pointer.x, pointer.y, 2.2, 0, Math.PI * 2);
         ctx.fillStyle = `rgba(${accent}, 0.7)`;
@@ -188,9 +192,21 @@ export function BackdropField() {
     const onTouchEnd = () => {
       pointer.active = false;
     };
+    const onScroll = () => {
+      scrolling = true;
+      window.clearTimeout(scrollEndTimer);
+      scrollEndTimer = window.setTimeout(() => {
+        scrolling = false;
+        resize();
+      }, 160);
+    };
+    const onResize = () => {
+      if (!scrolling) resize();
+    };
 
     resize();
-    window.addEventListener('resize', resize);
+    window.addEventListener('resize', onResize);
+    window.addEventListener('scroll', onScroll, { passive: true });
     window.addEventListener('pointermove', onPointer, { passive: true });
     document.documentElement.addEventListener('pointerleave', onLeave);
     window.addEventListener('touchstart', onTouch, { passive: true });
@@ -203,7 +219,9 @@ export function BackdropField() {
 
     return () => {
       window.cancelAnimationFrame(frame);
-      window.removeEventListener('resize', resize);
+      window.clearTimeout(scrollEndTimer);
+      window.removeEventListener('resize', onResize);
+      window.removeEventListener('scroll', onScroll);
       window.removeEventListener('pointermove', onPointer);
       document.documentElement.removeEventListener('pointerleave', onLeave);
       window.removeEventListener('touchstart', onTouch);
