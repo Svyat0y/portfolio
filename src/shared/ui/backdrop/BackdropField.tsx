@@ -35,8 +35,6 @@ export function BackdropField() {
     let rx: number[] = [];
     let ry: number[] = [];
     const pointer = { x: -9999, y: -9999, active: false };
-    let scrolling = false;
-    let scrollEndTimer = 0;
 
     const makeParticle = (): Particle => ({
       x: Math.random() * width,
@@ -81,7 +79,7 @@ export function BackdropField() {
     };
 
     const draw = () => {
-      if (!scrolling && (window.innerWidth !== width || window.innerHeight !== height)) resize();
+      if (window.innerWidth !== width || window.innerHeight !== height) resize();
 
       ctx.clearRect(0, 0, width, height);
 
@@ -180,52 +178,23 @@ export function BackdropField() {
     const onLeave = () => {
       pointer.active = false;
     };
-    const onTouch = (e: TouchEvent) => {
-      const touch = e.touches[0];
-      if (!touch) return;
-      pointer.x = touch.clientX;
-      pointer.y = touch.clientY;
-      pointer.active = true;
-    };
-    const onTouchEnd = () => {
-      pointer.active = false;
-    };
-    const onScroll = () => {
-      scrolling = true;
-      window.clearTimeout(scrollEndTimer);
-      scrollEndTimer = window.setTimeout(() => {
-        scrolling = false;
-        resize();
-      }, 160);
-    };
-    const onResize = () => {
-      if (!scrolling) resize();
-    };
 
     resize();
-    window.addEventListener('resize', onResize);
-    window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('pointermove', onPointer, { passive: true });
-    document.documentElement.addEventListener('pointerleave', onLeave);
-    window.addEventListener('touchstart', onTouch, { passive: true });
-    window.addEventListener('touchmove', onTouch, { passive: true });
-    window.addEventListener('touchend', onTouchEnd, { passive: true });
-    window.addEventListener('touchcancel', onTouchEnd, { passive: true });
+    window.addEventListener('resize', resize);
+    const finePointer = window.matchMedia('(pointer: fine)').matches;
+    if (finePointer) {
+      window.addEventListener('pointermove', onPointer, { passive: true });
+      document.documentElement.addEventListener('pointerleave', onLeave);
+    }
 
     if (reduce) draw();
     else loop();
 
     return () => {
       window.cancelAnimationFrame(frame);
-      window.clearTimeout(scrollEndTimer);
-      window.removeEventListener('resize', onResize);
-      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', resize);
       window.removeEventListener('pointermove', onPointer);
       document.documentElement.removeEventListener('pointerleave', onLeave);
-      window.removeEventListener('touchstart', onTouch);
-      window.removeEventListener('touchmove', onTouch);
-      window.removeEventListener('touchend', onTouchEnd);
-      window.removeEventListener('touchcancel', onTouchEnd);
     };
   }, []);
 
