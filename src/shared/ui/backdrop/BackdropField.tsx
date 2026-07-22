@@ -83,11 +83,9 @@ export function BackdropField() {
     const draw = () => {
       if (!scrolling && (window.innerWidth !== width || window.innerHeight !== height)) resize();
 
-      const active = pointer.active && !scrolling;
-
       ctx.clearRect(0, 0, width, height);
 
-      if (active) {
+      if (pointer.active) {
         const halo = ctx.createRadialGradient(
           pointer.x,
           pointer.y,
@@ -115,7 +113,7 @@ export function BackdropField() {
         let y = p.y;
         let lit = false;
 
-        if (active) {
+        if (pointer.active) {
           const dx = p.x - pointer.x;
           const dy = p.y - pointer.y;
           const dSq = dx * dx + dy * dy;
@@ -143,7 +141,7 @@ export function BackdropField() {
         ctx.fill();
       }
 
-      if (active) {
+      if (pointer.active) {
         ctx.beginPath();
         ctx.arc(pointer.x, pointer.y, 2.2, 0, Math.PI * 2);
         ctx.fillStyle = `rgba(${accent}, 0.7)`;
