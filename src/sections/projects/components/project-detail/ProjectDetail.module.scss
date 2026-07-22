@@ -33,17 +33,23 @@
   height: 100dvh;
   overflow-y: auto;
   padding: calc(var(--header-height) + var(--space-3)) var(--gutter) var(--space-5);
-  @media (max-width: 768px) {
-    padding-top: calc(var(--space-4) + env(safe-area-inset-top));
-  }
   background:
     radial-gradient(52rem 52rem at 94% -10%, rgba(var(--color-accent-rgb), 0.1), transparent 60%),
     var(--color-bg-raised);
   box-shadow: -24px 0 48px -16px rgba(0, 0, 0, 0.6);
   animation: panel-in 320ms cubic-bezier(0.16, 1, 0.3, 1) both;
 
+  &:focus {
+    outline: none;
+  }
+
   .closing & {
     animation: panel-out 320ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  @media (max-width: 768px) {
+    padding-top: calc(var(--space-4) + env(safe-area-inset-top));
+    background: var(--color-bg-raised);
   }
 }
 
