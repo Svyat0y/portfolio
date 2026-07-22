@@ -18,6 +18,7 @@ export function ProjectDetail({ project, closing, onBack, onExited }: ProjectDet
     if (node && !node.open) {
       triggerRef.current = document.activeElement as HTMLElement | null;
       node.showModal();
+      (node.firstElementChild as HTMLElement | null)?.focus();
     }
   }, []);
 
@@ -45,6 +46,7 @@ export function ProjectDetail({ project, closing, onBack, onExited }: ProjectDet
     >
       <div
         className={styles.panel}
+        tabIndex={-1}
         onAnimationEnd={(event) => {
           if (closing && event.currentTarget === event.target) onExited();
         }}
