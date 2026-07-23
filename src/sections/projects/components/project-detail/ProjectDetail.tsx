@@ -81,7 +81,11 @@ export function ProjectDetail({ project, closing, onBack, onExited }: ProjectDet
             </ul>
           )}
 
-          <p className={styles.description}>{project.description}</p>
+          <div className={styles.description}>
+            {project.description.map((paragraph) => (
+              <p key={paragraph}>{paragraph}</p>
+            ))}
+          </div>
 
           <ul className={styles.stack}>
             {project.stack.map((tech) => (
