@@ -43,6 +43,11 @@ export const projects: Project[] = [
     stack: ['React', 'NestJS', 'TypeScript'],
     url: 'https://awesome-form-builder.netlify.app/',
     tags: ['pet project'],
+    screenshots: [
+      '/screenshots/form-builder/1.png',
+      '/screenshots/form-builder/2.png',
+      '/screenshots/form-builder/3.png',
+    ],
   },
   {
     title: 'Duelmasters',
@@ -53,6 +58,11 @@ export const projects: Project[] = [
     ],
     stack: ['React', 'Next.js', 'TypeScript', 'GraphQL', 'Puppeteer'],
     url: 'https://www.duelmasters.io/',
+    screenshots: [
+      '/screenshots/duelmasters/1.png',
+      '/screenshots/duelmasters/2.png',
+      '/screenshots/duelmasters/3.png',
+    ],
   },
   {
     title: 'Diamore',
@@ -72,6 +82,12 @@ export const projects: Project[] = [
     ],
     stack: ['React', 'Next.js'],
     url: 'https://minicurrencychanger.netlify.app/',
+    screenshots: [
+      '/screenshots/currency-converter/1.png',
+      '/screenshots/currency-converter/2.png',
+      '/screenshots/currency-converter/3.png',
+      '/screenshots/currency-converter/4.png',
+    ],
   },
   {
     title: 'Guided Photo Collection App',

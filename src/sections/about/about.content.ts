@@ -5,7 +5,7 @@ export const aboutContent = {
     'Focused on modern development practices, including automated testing and code quality tools, and based in Valencia, Spain.',
   ],
   resume: {
-    previewSrc: '/resume-preview.jpg',
+    previewSrc: '/resume-preview.png',
     downloadHref: '/resume.pdf',
     downloadLabel: 'download CV ↓',
   },
