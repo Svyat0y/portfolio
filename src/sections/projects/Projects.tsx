@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation, Pagination, Keyboard } from 'swiper/modules';
+import {Navigation, Pagination, Keyboard, Autoplay} from 'swiper/modules';
 import type { Swiper as SwiperClass } from 'swiper/types';
 import 'swiper/css';
 import 'swiper/css/pagination';
@@ -110,11 +110,12 @@ export function Projects() {
           key={itemsPerSlide}
           className={styles.swiper}
           onSwiper={setSwiper}
-          modules={[Navigation, Pagination, Keyboard]}
+          modules={[Navigation, Pagination, Autoplay, Keyboard]}
           navigation={hasMultiplePages ? { prevEl, nextEl } : false}
           pagination={hasMultiplePages ? { el: paginationEl, clickable: true } : false}
           keyboard={{ enabled: true }}
           loop={hasMultiplePages}
+          autoplay={{delay: 6000, pauseOnMouseEnter: true}}
         >
           {pages.map((pageProjects, index) => (
             <SwiperSlide key={index}>
