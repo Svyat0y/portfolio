@@ -79,8 +79,8 @@ button {
 }
 
 .section {
-  padding: calc(var(--header-height) + var(--space-2)) var(--gutter)
-    calc(var(--space-5) + env(safe-area-inset-bottom));
+  padding: calc(var(--header-height) + var(--space-2) + env(safe-area-inset-top))
+    var(--gutter) calc(var(--space-5) + env(safe-area-inset-bottom));
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -97,7 +97,7 @@ button {
 
 @media (max-width: 768px) {
   .section {
-    padding-top: calc(var(--header-height) + var(--space-1));
+    padding-top: calc(var(--header-height) + var(--space-1) + env(safe-area-inset-top));
     padding-bottom: calc(var(--space-3) + env(safe-area-inset-bottom));
   }
 }

@@ -7,7 +7,7 @@
   align-items: center;
   justify-content: center;
   gap: 0.35rem;
-  padding: 0.625rem var(--gutter);
+  padding: calc(0.625rem + env(safe-area-inset-top)) var(--gutter) 0.625rem;
   background: linear-gradient(to bottom, rgba(10, 10, 10, 0.96) 72%, rgba(10, 10, 10, 0));
   -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
@@ -17,8 +17,8 @@
     flex-direction: row;
     justify-content: space-between;
     gap: 0;
-    height: var(--header-height);
-    padding: 0 var(--gutter);
+    height: calc(var(--header-height) + env(safe-area-inset-top));
+    padding: env(safe-area-inset-top) var(--gutter) 0;
   }
 }
 
